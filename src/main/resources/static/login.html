@@ -1,14 +1,13 @@
 <DOCTYPE html>
 <html>
 <head>
-    <title>KIRTASİYE  GİRİŞ</title>
+    <title> GİRİŞ</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../static/css/table.css" type="text/css" media="screen, projection"/>
     <link rel="stylesheet" href="jquery.ui/jquery-ui.css" type="text/css" media="screen, projection"/>
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css" type="text/css" media="screen, projection"/>
-    <script type="text/javascript" src="../static/jquery/jquery-3.7.1.js"></script>
-    <script type="text/javascript" src="../static/jquery/jquery-ui.js"></script>
-    <script type="text/javascript" src="../static/jquery.tablesorter/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="./jquery.ui/jquery-3.7.1.js"></script>
+    <script type="text/javascript" src="./jquery.ui/jquery-ui.js"></script>
     <style>
         .divider:after,
         .divider:before {
@@ -32,22 +31,41 @@
             var password = $('#password').val();
 
             $.ajax({
-                type: "POST",
-                url: 'ajxLogin.jsp',
-                data:"email=" + email+
-                     "&password=" + password,
-                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                type: "GET",
+                url: '/api/products/getall',
+                contentType: "JSON",
                 success: function (ajaxCevap) {
-                    if (ajaxCevap.trim() == "OK") {
-                        alert("You have successfully logged in.");
-                         window.location.href = "index.jsp";
-                    } else {
-                        alert("You have logged in incorrectly. Please try again.");
-                    }
+                    console.log(ajaxCevap);
+                    createTable(ajaxCevap); // Tablo oluşturma fonksiyonunu çağırıyoruz
+                },
+                error: function (xhr, status, error) {
+                    console.error("Bir hata oluştu: ", error);
                 }
-
             });
         }
+
+        // Gelen verileri tabloya dönüştüren fonksiyon
+        function createTable(data) {
+            // Tablonun HTML yapısını hazırlıyoruz
+            var tableHtml = "<table border='1' style='width:100%; text-align:left;'><tr><th>ID</th><th>Name</th><th>Price</th><th>Stock Amount</th><th>Description</th></tr>";
+
+            // Her bir ürünü tablo satırına ekliyoruz
+            data.forEach(function(item) {
+                tableHtml += "<tr>" +
+                    "<td>" + item.id + "</td>" +
+                    "<td>" + (item.name || 'N/A') + "</td>" +
+                    "<td>" + item.price + "</td>" +
+                    "<td>" + item.stockAmount + "</td>" +
+                    "<td>" + (item.description || 'N/A') + "</td>" +
+                    "</tr>";
+            });
+
+            tableHtml += "</table>";
+
+            // Tablomuzu sayfada bir elemente ekliyoruz (örneğin, bir div içerisine)
+            $('#tableContainer').html(tableHtml);
+        }
+
 
     </script>
 </head>

@@ -41,7 +41,52 @@
       <script src="./jquery.ui/jquery-3.7.1.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
       <script src="./bootstrap/bootstrap.bundle.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      getProducts();
+    });
 
+    function getProducts(){
+      var email = $('#email').val();
+      var password = $('#password').val();
+
+      $.ajax({
+        type: "GET",
+        url: '/api/products/getall',
+        contentType: "JSON",
+        success: function (ajaxCevap) {
+          console.log(ajaxCevap);
+          createTable(ajaxCevap); // Tablo oluşturma fonksiyonunu çağırıyoruz
+        },
+        error: function (xhr, status, error) {
+          console.error("Bir hata oluştu: ", error);
+        }
+      });
+    }
+
+    // Gelen verileri tabloya dönüştüren fonksiyon
+    function createTable(data) {
+      var tableHtml = "";
+
+      // Her bir ürünü tablo satırına ekliyoruz
+      data.forEach(function(item) {
+      tableHtml += "<tr>" +
+        "<td>" + item.id + "</td>" +
+        "<td>" + (item.name || 'N/A') + "</td>" +
+        "<td>" + item.price + "</td>" +
+        "<td>" + item.stockAmount + "</td>" +
+        "<td>" + (item.description || 'N/A') + "</td>" +
+        "</tr>";
+      });
+
+      tableHtml += "</table>";
+
+      // Tablomuzu sayfada bir elemente ekliyoruz (örneğin, bir div içerisine)
+      $('#mytbl').html(tableHtml);
+    }
+
+
+  </script>
 </head>
 <body>
 
@@ -68,7 +113,23 @@
   
   <!--  içerik -->
   <div class="divbody">
+    <div id="tableContainer">
+      <table class="table table-striped" style='width:100%; text-align:left;'>
+        <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Price</th>
+          <th scope="col">Stock Amount</th>
+          <th scope="col">Description</th>
+        </tr>
+        </thead>
+        <tbody id="mytbl">
 
+        </tbody>
+
+        </table>
+    </div>
    </div>
 
 

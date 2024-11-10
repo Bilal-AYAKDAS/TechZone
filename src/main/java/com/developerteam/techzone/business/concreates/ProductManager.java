@@ -19,9 +19,6 @@ public class ProductManager implements IProductService {
         this.productRepository =productRepository;
     }
 
-    //İçleri Doldurulacak Metotlar ...
-
-
     @Override
     public List<Product> getAll() {
         return this.productRepository.findAll();
