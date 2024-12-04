@@ -3,10 +3,10 @@ package com.developerteam.techzone.business.concreates;
 import com.developerteam.techzone.business.abstracts.ICartService;
 import com.developerteam.techzone.dataAccess.abstracts.ICartItemRepository;
 import com.developerteam.techzone.dataAccess.abstracts.ICartRepository;
-import com.developerteam.techzone.entities.concreates.Cart;
-import com.developerteam.techzone.entities.concreates.CartItem;
-import com.developerteam.techzone.entities.concreates.Product;
-import com.developerteam.techzone.entities.concreates.User;
+import com.developerteam.techzone.entities.concreates.*;
+import com.developerteam.techzone.exception.BaseException;
+import com.developerteam.techzone.exception.ErrorMessage;
+import com.developerteam.techzone.exception.MessageType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +16,11 @@ import java.util.Optional;
 @Service
 public class CartManager implements ICartService {
 
+    @Autowired
     private ICartRepository cartRepository;
-    private ICartItemRepository cartItemRepository;
 
     @Autowired
-    public CartManager(ICartRepository cartRepository,ICartItemRepository cartItemRepository) {
-        this.cartRepository  = cartRepository;
-        this.cartItemRepository = cartItemRepository;
-    }
+    private ICartItemRepository cartItemRepository;
 
     @Override
     public List<Cart> getAll() {
@@ -32,7 +29,7 @@ public class CartManager implements ICartService {
 
     @Override
     public Cart getById(int id) {
-        return cartRepository.findById(id).orElse(null);
+        return findCartOrThrow(id);
     }
 
     @Override
@@ -47,6 +44,7 @@ public class CartManager implements ICartService {
 
     @Override
     public void delete(int id) {
+        findCartOrThrow(id);
         cartRepository.deleteById(id);
     }
 
@@ -65,6 +63,9 @@ public class CartManager implements ICartService {
     @Override
     public List <CartItem> getCartItemsByUserId(int userId) {
         Optional <Cart> cart = cartRepository.findByUserId(userId);
+        if (cart.isEmpty()){
+            new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(userId)));
+        }
         return cart.map(value -> cartItemRepository.findByCartId(value.getId())).orElse(null);
     }
 
@@ -90,4 +91,11 @@ public class CartManager implements ICartService {
     public void removeItemFromCart(int cartItemId) {
         cartItemRepository.deleteById(cartItemId);
     }
+
+    private Cart findCartOrThrow(int id) {
+        return cartRepository.findById(id)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(id))));
+    }
+
+
 }

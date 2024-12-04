@@ -3,6 +3,8 @@ package com.developerteam.techzone.webApi.controllers;
 
 import com.developerteam.techzone.business.abstracts.IBrandService;
 import com.developerteam.techzone.entities.concreates.Brand;
+import com.developerteam.techzone.entities.dto.DtoBrand;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,18 +26,18 @@ public class BrandsController {
     }
 
     @GetMapping("/{id}")
-    public Brand getById(@PathVariable int id){
+    public DtoBrand getById(@PathVariable int id){
         return this.brandService.getById(id);
     }
 
     @PostMapping("/add")
-    public Brand add(@RequestBody Brand brand){
-        return this.brandService.add(brand);
+    public DtoBrand add(@RequestBody @Valid DtoBrand dtoBrand){
+        return this.brandService.add(dtoBrand);
     }
 
     @PutMapping("/update/{id}")
-    public Brand update(@PathVariable int id,@RequestBody Brand brand){
-        return this.brandService.update(id,brand);
+    public DtoBrand update(@PathVariable int id,@RequestBody @Valid DtoBrand dtoBrand){
+        return this.brandService.update(id,dtoBrand);
     }
 
     @DeleteMapping("/delete/{id}")

@@ -3,6 +3,9 @@ package com.developerteam.techzone.webApi.controllers;
 
 import com.developerteam.techzone.business.abstracts.IProductService;
 import com.developerteam.techzone.entities.concreates.Product;
+import com.developerteam.techzone.entities.dto.DtoProduct;
+import com.developerteam.techzone.entities.dto.DtoProductIU;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,52 +15,49 @@ import java.util.List;
 @RequestMapping("/api/products")
 
 public class ProductsController {
-    private IProductService productService;
 
     @Autowired
-    public ProductsController(IProductService productService){
-        this.productService = productService;
-    }
+    private IProductService productService;
 
     @GetMapping("/getall")
-    public List<Product> getAll(){
+    public List<DtoProduct> getAll(){
         return this.productService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Product getById(@PathVariable int id){
+    public DtoProduct getById(@PathVariable int id){
         return this.productService.getById(id);
     }
 
     @GetMapping("/getByCategoryId/{categoryId}")
-    public List<Product> getByCategoryId(@PathVariable int categoryId){
+    public List<DtoProduct> getByCategoryId(@PathVariable int categoryId){
         return this.productService.getByCategoryId(categoryId);
     }
 
     @GetMapping("/getByBrandId/{brandId}")
-    public List<Product> getByBrandId(@PathVariable int brandId){
+    public List<DtoProduct> getByBrandId(@PathVariable int brandId){
         return this.productService.getByBrandId(brandId);
     }
 
     @GetMapping("/getByCategoryIdAndBrandId/{categoryId}/{brandId}")
-    public List<Product> getByCategoryIdAndBrandId(@PathVariable int categoryId,@PathVariable int brandId){
+    public List<DtoProduct> getByCategoryIdAndBrandId(@PathVariable int categoryId,@PathVariable int brandId){
         return this.productService.getByCategoryIdAndBrandId(categoryId,brandId);
     }
 
     @GetMapping("/getByProductName/{productName}")
-    public List<Product> getByProductName(@PathVariable String productName){
+    public List<DtoProduct> getByProductName(@PathVariable String productName){
         return this.productService.getByProductName(productName);
     }
 
 
     @PostMapping("/add")
-    public Product add (@RequestBody Product product){
-        return this.productService.add(product);
+    public DtoProduct add (@RequestBody @Valid DtoProductIU dtoProductIU){
+        return this.productService.add(dtoProductIU);
     }
 
     @PutMapping("/update/{id}")
-    public Product update(@PathVariable int id,@RequestBody Product product){
-        return this.productService.update(id,product);
+    public DtoProduct update(@PathVariable int id,@RequestBody @Valid DtoProductIU dtoProductIU){
+        return this.productService.update(id,dtoProductIU);
     }
 
     @DeleteMapping("/delete/{id}")

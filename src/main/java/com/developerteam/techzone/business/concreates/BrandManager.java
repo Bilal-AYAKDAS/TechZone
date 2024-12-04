@@ -3,6 +3,11 @@ package com.developerteam.techzone.business.concreates;
 import com.developerteam.techzone.business.abstracts.IBrandService;
 import com.developerteam.techzone.dataAccess.abstracts.IBrandRepository;
 import com.developerteam.techzone.entities.concreates.Brand;
+import com.developerteam.techzone.entities.dto.DtoBrand;
+import com.developerteam.techzone.exception.BaseException;
+import com.developerteam.techzone.exception.ErrorMessage;
+import com.developerteam.techzone.exception.MessageType;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,30 +30,44 @@ public class BrandManager implements IBrandService {
     }
 
     @Override
-    public Brand getById(int id ){
-        return brandRepository.findById(id).orElse(null);
+    public DtoBrand getById(int id ){
+        Brand dbBrand = findBrandOrThrow(id);
+        DtoBrand response = new DtoBrand();
+        BeanUtils.copyProperties(dbBrand, response);
+        return response;
     }
 
     @Override
-    public  Brand add(Brand brand){
-        return brandRepository.save(brand);
+    public DtoBrand add(DtoBrand dtoBrand){
+        Brand brand = new Brand();
+        BeanUtils.copyProperties(dtoBrand,brand);
+        Brand dbStudent = brandRepository.save(brand);
+        DtoBrand response = new DtoBrand();
+        BeanUtils.copyProperties(dbStudent,response);
+        return response;
     }
 
     @Override
-    public Brand update(int id,Brand brand){
+    public DtoBrand update(int id,DtoBrand dtoBrand){
 
-        Optional <Brand> existingBrand = brandRepository.findById(id);
-        if(existingBrand.isPresent()){
-            Brand updateBrand = existingBrand.get();
-            updateBrand.setName(brand.getName());
-            return brandRepository.save(updateBrand);
-        }
-        return null;
+        Brand existingBrand = findBrandOrThrow(id);
+        existingBrand.setName(dtoBrand.getName());
+        Brand dbBrand = brandRepository.save(existingBrand);
+        DtoBrand response = new DtoBrand();
+        BeanUtils.copyProperties(dbBrand,response);
+        return response;
     }
 
     @Override
     public void delete(int id){
+        findBrandOrThrow(id);
         brandRepository.deleteById(id);
     }
+
+    private Brand findBrandOrThrow(int id) {
+        return brandRepository.findById(id)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(id))));
+    }
+
 
 }
