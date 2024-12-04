@@ -9,10 +9,6 @@ public interface IUserRepository extends JpaRepository<User,Integer> {
 
     User findByEmail(String email);
 
-<<<<<<< HEAD
-=======
     User findByFirstName(String firstName);
-    
->>>>>>> fa31834 (feat: Implement DTO objects and exception handling architecture)
     User findByEmailAndPassword(String email, String password);
 }

@@ -11,10 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
-<<<<<<< HEAD
-=======
 
->>>>>>> fa31834 (feat: Implement DTO objects and exception handling architecture)
     private ICartService cartService;
 
     @Autowired
