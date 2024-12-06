@@ -93,7 +93,7 @@ class BrandManagerTest {
     @Transactional
     @Rollback(false)
     void testDelete() {
-        Brand brand = brandRepository.findAll().get(2);
+        Brand brand = brandRepository.getById(7);
         brandRepository.delete(brand);
     }
 }
