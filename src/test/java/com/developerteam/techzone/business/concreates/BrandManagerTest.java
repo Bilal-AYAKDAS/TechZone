@@ -55,6 +55,29 @@ class BrandManagerTest {
 
 
     @Test
+    void testAddInvalidBrandEmptyName() {
+        // Arrange
+        DtoBrand dtoBrand = new DtoBrand();
+        dtoBrand.setName("");
+
+        Set<ConstraintViolation<DtoBrand>> violations = validator.validate(dtoBrand);
+        assertEquals(2, violations.size(), "There should be 2 validation error for an empty name.");
+
+        boolean hasNotEmptyMessage = violations.stream()
+                .anyMatch(v -> v.getMessage().equals("Brand name cannot be empty."));
+
+        assertEquals(true, hasNotEmptyMessage);
+        
+        assertThrows(ConstraintViolationException.class, () -> {
+            if (!violations.isEmpty()) {
+                throw new ConstraintViolationException(violations);
+            }
+            brandManager.add(dtoBrand);
+        });
+
+    }
+    
+    @Test
     void testAddInvalidBrandTooShortName() {
         // Arrange
         DtoBrand dtoBrand = new DtoBrand();
