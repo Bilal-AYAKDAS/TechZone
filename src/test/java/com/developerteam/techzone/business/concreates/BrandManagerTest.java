@@ -34,6 +34,7 @@ class BrandManagerTest {
     @Test
     void testGetAll() {
         List<Brand> brands = brandManager.getAll();
+        assertNotNull(brands);
         assertEquals(5, brands.size());
         assertEquals(1, brands.get(0).getId());
         assertEquals("Apple", brands.get(0).getName());
