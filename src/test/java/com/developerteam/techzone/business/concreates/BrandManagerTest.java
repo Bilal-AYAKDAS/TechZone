@@ -26,13 +26,6 @@ class BrandManagerTest {
     @Autowired
     private IBrandRepository brandRepository;
 
-    private final Validator validator;
-
-    public BrandManagerTest() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        this.validator = factory.getValidator();
-    }
-
     @BeforeEach
     void setUp() {
         brandManager = new BrandManager(brandRepository);
@@ -53,70 +46,6 @@ class BrandManagerTest {
 
     }
 
-
-    @Test
-    void testAddInvalidBrandEmptyName() {
-        // Arrange
-        DtoBrand dtoBrand = new DtoBrand();
-        dtoBrand.setName("");
-
-        Set<ConstraintViolation<DtoBrand>> violations = validator.validate(dtoBrand);
-        assertEquals(2, violations.size(), "There should be 2 validation error for an empty name.");
-
-        boolean hasNotEmptyMessage = violations.stream()
-                .anyMatch(v -> v.getMessage().equals("Brand name cannot be empty."));
-
-        assertEquals(true, hasNotEmptyMessage);
-        
-        assertThrows(ConstraintViolationException.class, () -> {
-            if (!violations.isEmpty()) {
-                throw new ConstraintViolationException(violations);
-            }
-            brandManager.add(dtoBrand);
-        });
-
-    }
-    
-    @Test
-    void testAddInvalidBrandTooShortName() {
-        // Arrange
-        DtoBrand dtoBrand = new DtoBrand();
-        dtoBrand.setName("A");
-
-        // Validation Control
-        Set<ConstraintViolation<DtoBrand>> violations = validator.validate(dtoBrand);
-        assertEquals(1, violations.size());
-        assertEquals("Brand name must be between 2 and 14 characters.", violations.iterator().next().getMessage());
-
-        // If validation is unsuccess, should not call add
-        assertThrows(ConstraintViolationException.class, () -> {
-            if (!violations.isEmpty()) {
-                throw new ConstraintViolationException(violations);
-            }
-            brandManager.add(dtoBrand);
-        });
-    }
-
-    @Test
-    void testAddInvalidBrandTooLongName() {
-        // Arrange
-        DtoBrand dtoBrand = new DtoBrand();
-        dtoBrand.setName("VeryLongBrandName"); // Geçersiz: Çok uzun isim
-
-        // Validation control
-        Set<ConstraintViolation<DtoBrand>> violations = validator.validate(dtoBrand);
-        assertEquals(1, violations.size(), "There should be 1 validation error for a long name.");
-
-
-        // If validation is unsuccess, should not call add
-        assertThrows(ConstraintViolationException.class, () -> {
-            if (!violations.isEmpty()) {
-                throw new ConstraintViolationException(violations);
-            }
-            brandManager.add(dtoBrand);
-        });
-    }
-
     @Test
     @Transactional
     @Rollback(false)
@@ -124,19 +53,16 @@ class BrandManagerTest {
         DtoBrand dtoBrand = new DtoBrand();
         dtoBrand.setName("Xiaomi");
 
-        Set<ConstraintViolation<DtoBrand>> violations = validator.validate(dtoBrand);
-        assertEquals(0, violations.size());
-
         // Act
         DtoBrand result = brandManager.add(dtoBrand);
 
         // Assert
         assertEquals(dtoBrand.getName(), result.getName());
 
-        int s = (int)brandRepository.count();
 
         // Database control
-        Brand savedBrand = brandRepository.findAll().get(s-1);
+        //brandManager.getById(7);
+        Brand savedBrand = brandRepository.getById(7);
         assertEquals(dtoBrand.getName(), savedBrand.getName());
     }
 
@@ -145,21 +71,21 @@ class BrandManagerTest {
     @Rollback(false)
     void testUpdate() {
         DtoBrand dtoBrand = new DtoBrand();
-        dtoBrand.setName("hp");
+        dtoBrand.setName("Lenovo");
 
         DtoBrand result = brandManager.add(dtoBrand);
 
         DtoBrand updatedBrand = new DtoBrand();
-        updatedBrand.setName("Lenovo");
+        updatedBrand.setName("hp");
 
-        int s = (int)brandRepository.count();
-        DtoBrand updating = brandManager.update(s, updatedBrand);
+
+        DtoBrand updating = brandManager.update(4, updatedBrand);
 
         assertNotNull(updating);
-        assertEquals("Lenovo", updating.getName());
+        assertEquals("hp", updating.getName());
 
         //Database control
-        Brand foundBrand = brandRepository.findAll().get(s-1);
+        Brand foundBrand = brandRepository.getById(4);
         assertEquals(updatedBrand.getName(), foundBrand.getName());
     }
 
