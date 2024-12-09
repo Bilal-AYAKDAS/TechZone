@@ -6,6 +6,7 @@ import com.developerteam.techzone.entities.concreates.Brand;
 import com.developerteam.techzone.entities.concreates.Category;
 import com.developerteam.techzone.entities.dto.DtoBrand;
 import com.developerteam.techzone.entities.dto.DtoCategory;
+import com.developerteam.techzone.entities.dto.DtoCategoryIU;
 import com.developerteam.techzone.exception.BaseException;
 import com.developerteam.techzone.exception.ErrorMessage;
 import com.developerteam.techzone.exception.MessageType;
@@ -13,22 +14,26 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CategoryManager implements ICategoryService {
 
+    @Autowired
     private ICategoryRepository categoryRepository;
 
-    @Autowired
-    public CategoryManager(ICategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
-
     @Override
-    public List<Category> getAll() {
-        return categoryRepository.findAll();
+    public List<DtoCategory> getAll() {
+        List<Category> categories = categoryRepository.findAll();
+        List<DtoCategory> dtoCategories = new ArrayList<>();
+        for (Category category : categories) {
+            DtoCategory dtoCategory = new DtoCategory();
+            BeanUtils.copyProperties(category, dtoCategory);
+            dtoCategories.add(dtoCategory);
+        }
+        return dtoCategories;
     }
 
     @Override
@@ -40,9 +45,9 @@ public class CategoryManager implements ICategoryService {
     }
 
     @Override
-    public DtoCategory add(DtoCategory dtoCategory) {
+    public DtoCategory add(DtoCategoryIU dtoCategoryIU) {
         Category category = new Category();
-        BeanUtils.copyProperties(dtoCategory, category);
+        BeanUtils.copyProperties(dtoCategoryIU, category);
         Category dbCategory = categoryRepository.save(category);
         DtoCategory response = new DtoCategory();
         BeanUtils.copyProperties(dbCategory, response);
@@ -50,9 +55,9 @@ public class CategoryManager implements ICategoryService {
     }
 
     @Override
-    public DtoCategory update(int id, DtoCategory dtoCategory) {
+    public DtoCategory update(int id, DtoCategoryIU dtoCategoryIU) {
         Category existingCategory = findCategoryOrThrow(id);
-        existingCategory.setName(dtoCategory.getName());
+        existingCategory.setName(dtoCategoryIU.getName());
         DtoCategory response = new DtoCategory();
         Category dbCategory = categoryRepository.save(existingCategory);
         BeanUtils.copyProperties(dbCategory, response);

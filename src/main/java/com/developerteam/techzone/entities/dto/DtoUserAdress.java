@@ -1,6 +1,5 @@
 package com.developerteam.techzone.entities.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DtoBrand {
+public class DtoUserAdress {
 
-
-    private int id;
-    private String name;
+    private String country;
+    private String city;
+    private String district;
+    private String postCode;
+    private String adress;
 }

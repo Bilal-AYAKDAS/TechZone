@@ -1,18 +1,15 @@
 package com.developerteam.techzone.business.abstracts;
 
-import com.developerteam.techzone.entities.concreates.FavoriProduct;
-import com.developerteam.techzone.entities.concreates.User;
-import org.springframework.stereotype.Service;
+import com.developerteam.techzone.entities.dto.DtoFavoriProduct;
+import com.developerteam.techzone.entities.dto.DtoFavoriProductIU;
 
 import java.util.List;
 
 
 public interface IFavoriProductService {
 
-    List<FavoriProduct> getAll();
-    FavoriProduct getById(int id);
-    List<FavoriProduct>  getByUser(User user);
-    FavoriProduct add(FavoriProduct favoriProduct);
+    List<DtoFavoriProduct> getAll();
+    DtoFavoriProduct add(DtoFavoriProductIU dtoFavoriProductIU);
     void delete(int id);
 
 

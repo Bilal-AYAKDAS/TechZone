@@ -1,6 +1,6 @@
 package com.developerteam.techzone.entities.dto;
 
-
+import com.developerteam.techzone.entities.concreates.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +10,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DtoBrand {
-
+public class DtoFavoriProduct {
 
     private int id;
-    private String name;
+    private Product product;
+
 }

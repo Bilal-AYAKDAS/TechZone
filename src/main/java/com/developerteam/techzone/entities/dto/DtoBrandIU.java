@@ -1,5 +1,7 @@
 package com.developerteam.techzone.entities.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,15 +11,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DtoProduct {
+public class DtoBrandIU {
 
-    int id;
+    @Size(min = 2, max = 10, message = "Brand name must be between 2 and 14 characters.")
     private String name;
-    private double price;
-    private int stockAmount;
-    private String description;
-    private String imageUrl;
-    private int categoryId;
-    private int brandId;
-
 }

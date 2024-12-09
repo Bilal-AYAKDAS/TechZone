@@ -1,5 +1,4 @@
-package com.developerteam.techzone.entities.dto;
-
+package com.developerteam.techzone.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,9 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DtoBrand {
-
-
-    private int id;
-    private String name;
+public class RefreshTokenRequest {
+    private String refreshToken;
 }

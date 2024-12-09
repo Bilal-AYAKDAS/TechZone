@@ -4,6 +4,7 @@ package com.developerteam.techzone.webApi.controllers;
 import com.developerteam.techzone.business.abstracts.ICategoryService;
 import com.developerteam.techzone.entities.concreates.Category;
 import com.developerteam.techzone.entities.dto.DtoCategory;
+import com.developerteam.techzone.entities.dto.DtoCategoryIU;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class CategoriesController {
     private ICategoryService categoryService;
 
     @GetMapping("/getall")
-    public List<Category> getAll(){
+    public List<DtoCategory> getAll(){
         return this.categoryService.getAll();
     }
 
@@ -27,13 +28,13 @@ public class CategoriesController {
     }
 
     @PostMapping("/add")
-    public DtoCategory add(@RequestBody DtoCategory dtoCategory){
-        return this.categoryService.add(dtoCategory);
+    public DtoCategory add(@RequestBody DtoCategoryIU dtoCategoryIU){
+        return this.categoryService.add(dtoCategoryIU);
     }
 
     @PutMapping("/update/{id}")
-    public DtoCategory update(@PathVariable int id,@RequestBody DtoCategory dtoCategory){
-        return this.categoryService.update(id,dtoCategory);
+    public DtoCategory update(@PathVariable int id,@RequestBody DtoCategoryIU dtoCategoryIU){
+        return this.categoryService.update(id,dtoCategoryIU);
     }
 
     @DeleteMapping("/delete/{id}")

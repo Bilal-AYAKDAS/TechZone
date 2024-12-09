@@ -4,6 +4,8 @@ package com.developerteam.techzone.webApi.controllers;
 import com.developerteam.techzone.business.abstracts.IBrandService;
 import com.developerteam.techzone.entities.concreates.Brand;
 import com.developerteam.techzone.entities.dto.DtoBrand;
+import com.developerteam.techzone.entities.dto.DtoBrandIU;
+import com.developerteam.techzone.jwt.JwtService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +15,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/brands")
 public class BrandsController {
-    private IBrandService brandService;
 
     @Autowired
-    public BrandsController(IBrandService brandService) {
-        this.brandService = brandService;
-    }
+    private IBrandService brandService;
+
 
     @GetMapping("/getall")
-    public List<Brand> getAll() {
+    public List<DtoBrand> getAll() {
         return this.brandService.getAll();
+
     }
 
     @GetMapping("/{id}")
@@ -31,13 +32,13 @@ public class BrandsController {
     }
 
     @PostMapping("/add")
-    public DtoBrand add(@RequestBody @Valid DtoBrand dtoBrand){
-        return this.brandService.add(dtoBrand);
+    public DtoBrand add(@RequestBody @Valid DtoBrandIU dtoBrandIU){
+        return this.brandService.add(dtoBrandIU);
     }
 
     @PutMapping("/update/{id}")
-    public DtoBrand update(@PathVariable int id,@RequestBody @Valid DtoBrand dtoBrand){
-        return this.brandService.update(id,dtoBrand);
+    public DtoBrand update(@PathVariable int id,@RequestBody @Valid DtoBrandIU dtoBrandIU){
+        return this.brandService.update(id,dtoBrandIU);
     }
 
     @DeleteMapping("/delete/{id}")
