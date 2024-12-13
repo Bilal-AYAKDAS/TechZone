@@ -3,6 +3,8 @@ package com.developerteam.techzone.webApi.controllers;
 import com.developerteam.techzone.business.abstracts.ICartService;
 import com.developerteam.techzone.entities.concreates.Cart;
 import com.developerteam.techzone.entities.concreates.CartItem;
+import com.developerteam.techzone.entities.dto.DtoCartItem;
+import com.developerteam.techzone.entities.dto.DtoCartItemIU;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,13 +14,10 @@ import java.util.List;
 @RequestMapping("/api/cart")
 public class CartController {
 
+    @Autowired
     private ICartService cartService;
 
-    @Autowired
-    public CartController(ICartService cartService) {
-        this.cartService = cartService;
-    }
-
+    //For Admin
     @GetMapping("/getall")
     public List<Cart> getAll() {
         return this.cartService.getAll();
@@ -30,33 +29,26 @@ public class CartController {
     }
 
     @GetMapping("/getbyuserid/{userId}")
-    public Cart getByUserId(@PathVariable int userId){
+    public List<DtoCartItem> getByUserId(@PathVariable int userId){
         return this.cartService.getByUserId(userId);
     }
 
-    @PostMapping("/add")
-    public Cart add(@RequestBody Cart cart){
-        return this.cartService.add(cart);
+    //For Customer
+    @GetMapping("/getOwnCart")
+    public List<DtoCartItem> getOwnCart(){
+        return this.cartService.getOwnCart();
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable int id){
-        this.cartService.delete(id);
+    @PostMapping("/addCartItem")
+    public DtoCartItem addCartItem(@RequestBody DtoCartItemIU dtoCartItemIU){
+        return this.cartService.addItemToCart(dtoCartItemIU);
     }
 
-    @GetMapping("/getcartitembyuserid/{userId}")
-    public List<CartItem> getCartItemsByUserId(@PathVariable int userId){
-        return this.cartService.getCartItemsByUserId(userId);
+    @DeleteMapping("/deleteCartItem/{id}")
+    public void deleteCartItem(@PathVariable int id){
+        this.cartService.removeItemFromCart(id);
     }
 
-    @PostMapping("/addproducttocart")
-    public CartItem addProductToCartItems(@RequestBody CartItem cartItem){
-        return this.cartService.addItemToCart(cartItem);
-    }
 
-    @DeleteMapping("/deleteproductfromcart/{cartItemId}")
-    public void deleteProductFromCartItems(@PathVariable int cartItemId){
-        this.cartService.removeItemFromCart(cartItemId);
-    }
 
 }

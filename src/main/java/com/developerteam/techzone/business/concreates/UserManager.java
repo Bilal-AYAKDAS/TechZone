@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Service
 public class UserManager implements IUserService {
+
     private IUserRepository userRepository;
 
     @Autowired
@@ -30,7 +31,7 @@ public class UserManager implements IUserService {
 
     @Override
     public User getByEmail(String email) {
-        return this.userRepository.findByEmail(email);
+        return this.userRepository.findByEmail(email).get();
     }
 
     @Override

@@ -15,7 +15,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DtoProductIU {
 
-    @NotEmpty(message = "Product name cannot be empty")
     @Size(min = 2, max = 30, message = "Product name must be between 2 and 30 characters.")
     private String name;
 
@@ -27,8 +26,6 @@ public class DtoProductIU {
 
     @Size(max = 500,message = "Description  must be small  500 characters.")
     private String description;
-
-    private String imageUrl;
 
     @NotNull(message = "Product category can not be empty.")
     private int categoryId;

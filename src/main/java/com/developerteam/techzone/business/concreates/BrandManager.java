@@ -4,6 +4,7 @@ import com.developerteam.techzone.business.abstracts.IBrandService;
 import com.developerteam.techzone.dataAccess.abstracts.IBrandRepository;
 import com.developerteam.techzone.entities.concreates.Brand;
 import com.developerteam.techzone.entities.dto.DtoBrand;
+import com.developerteam.techzone.entities.dto.DtoBrandIU;
 import com.developerteam.techzone.exception.BaseException;
 import com.developerteam.techzone.exception.ErrorMessage;
 import com.developerteam.techzone.exception.MessageType;
@@ -11,22 +12,27 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class BrandManager implements IBrandService {
 
+    @Autowired
     private IBrandRepository brandRepository;
 
-    @Autowired
-    public BrandManager(IBrandRepository brandRepository) {
-        this.brandRepository = brandRepository;
-    }
-
     @Override
-    public List<Brand> getAll() {
-        return brandRepository.findAll();
+    public List<DtoBrand> getAll() {
+        List<Brand> brands = brandRepository.findAll();
+        List<DtoBrand> dtoBrands = new ArrayList<>();
+        for (Brand brand : brands) {
+            DtoBrand dtoBrand = new DtoBrand();
+            BeanUtils.copyProperties(brand, dtoBrand);
+            dtoBrands.add(dtoBrand);
+        }
+
+        return dtoBrands;
     }
 
     @Override
@@ -38,9 +44,9 @@ public class BrandManager implements IBrandService {
     }
 
     @Override
-    public DtoBrand add(DtoBrand dtoBrand){
+    public DtoBrand add(DtoBrandIU dtoBrandIU){
         Brand brand = new Brand();
-        BeanUtils.copyProperties(dtoBrand,brand);
+        BeanUtils.copyProperties(dtoBrandIU,brand);
         Brand dbStudent = brandRepository.save(brand);
         DtoBrand response = new DtoBrand();
         BeanUtils.copyProperties(dbStudent,response);
@@ -48,10 +54,10 @@ public class BrandManager implements IBrandService {
     }
 
     @Override
-    public DtoBrand update(int id,DtoBrand dtoBrand){
+    public DtoBrand update(int id,DtoBrandIU dtoBrandIU){
 
         Brand existingBrand = findBrandOrThrow(id);
-        existingBrand.setName(dtoBrand.getName());
+        existingBrand.setName(dtoBrandIU.getName());
         Brand dbBrand = brandRepository.save(existingBrand);
         DtoBrand response = new DtoBrand();
         BeanUtils.copyProperties(dbBrand,response);
