@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +19,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Service
 class BrandManagerTest {
 
     @Autowired
@@ -45,7 +47,7 @@ class BrandManagerTest {
     void testGetById() {
         DtoBrand brand = brandManager.getById(1);
         assertEquals("Apple", brand.getName());
-
+        assertEquals(1, brand.getId());
     }
 
     @Test
@@ -56,6 +58,7 @@ class BrandManagerTest {
         dtoBrandIU.setName("Apple");
 
         // Act
+        assertNotNull(dtoBrandIU);
         DtoBrand result = brandManager.add(dtoBrandIU);
 
         // Assert
@@ -92,6 +95,7 @@ class BrandManagerTest {
     @Rollback(false)
     void testDelete() {
         Brand brand = brandRepository.getById(3);
+        assertNotNull(brand);
         brandRepository.delete(brand);
     }
   
