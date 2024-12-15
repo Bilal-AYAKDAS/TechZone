@@ -24,6 +24,10 @@ public class CategoryManager implements ICategoryService {
     @Autowired
     private ICategoryRepository categoryRepository;
 
+    public CategoryManager(ICategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
     @Override
     public List<DtoCategory> getAll() {
         List<Category> categories = categoryRepository.findAll();
