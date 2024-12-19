@@ -10,4 +10,6 @@ import java.util.List;
 public interface IUserAdressRepository extends JpaRepository<UserAdress, Integer> {
 
     List<UserAdress> findByUserId(int userId);
+
+
 }

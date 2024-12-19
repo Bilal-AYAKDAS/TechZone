@@ -7,6 +7,9 @@ import com.developerteam.techzone.entities.concreates.Category;
 import com.developerteam.techzone.entities.concreates.Product;
 import com.developerteam.techzone.entities.dto.DtoProduct;
 import com.developerteam.techzone.entities.dto.DtoProductIU;
+import com.developerteam.techzone.exception.BaseException;
+import com.developerteam.techzone.exception.ErrorMessage;
+import com.developerteam.techzone.exception.MessageType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,9 +24,13 @@ public class ProductManager implements IProductService {
     @Autowired
     private IProductRepository productRepository;
 
+    public ProductManager(IProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
     @Override
     public DtoProduct getById(int id) {
-        Product product = productRepository.findById(id).get();
+        Product product = findProductOrThrow(id);
         DtoProduct dtoProduct = new DtoProduct();
         dtoProduct.setId(product.getId());
         dtoProduct.setName(product.getName());
@@ -128,11 +135,8 @@ public class ProductManager implements IProductService {
     @Override
     public DtoProduct add(DtoProductIU dtoProductIU) {
         Product product = new Product();
-        product.setName(dtoProductIU.getName());
-        product.setPrice(dtoProductIU.getPrice());
-        product.setStockAmount(dtoProductIU.getStockAmount());
-        product.setDescription(dtoProductIU.getDescription());
-        product.setImageUrl(dtoProductIU.getImageUrl());
+        BeanUtils.copyProperties(dtoProductIU, product);
+        product.setImageUrl("imageURL");
         Category productCategory = new Category();
         productCategory.setId(dtoProductIU.getCategoryId());
         product.setCategory(productCategory);
@@ -141,47 +145,45 @@ public class ProductManager implements IProductService {
         product.setBrand(productBrand);
         Product dbProduct = this.productRepository.save(product);
         DtoProduct response = new DtoProduct();
-        response.setId(dbProduct.getId());
-        response.setName(dbProduct.getName());
-        response.setPrice(dbProduct.getPrice());
-        response.setStockAmount(dbProduct.getStockAmount());
-        response.setDescription(dbProduct.getDescription());
-        response.setImageUrl(dbProduct.getImageUrl());
+        BeanUtils.copyProperties(dbProduct, response);
         response.setBrandId(dbProduct.getBrand().getId());
         response.setCategoryId(dbProduct.getCategory().getId());
-
         return response;
     }
 
     @Override
     public DtoProduct update(int id, DtoProductIU dtoProductIU) {
-        Optional<Product> existingProduct = this.productRepository.findById(id);
-        if(existingProduct.isPresent()){
-            Product updateProduct = existingProduct.get();
-            updateProduct.setName(dtoProductIU.getName());
-            updateProduct.setPrice(dtoProductIU.getPrice());
-            updateProduct.setStockAmount(dtoProductIU.getStockAmount());
-            updateProduct.setDescription(dtoProductIU.getDescription());
-            updateProduct.setImageUrl(dtoProductIU.getImageUrl());
-            Brand productBrand = new Brand();
-            productBrand.setId(dtoProductIU.getBrandId());
-            updateProduct.setBrand(productBrand);
-            Category productCategory = new Category();
-            productCategory.setId(dtoProductIU.getCategoryId());
-            updateProduct.setCategory(productCategory);
-            Product dbProduct = this.productRepository.save(updateProduct);
-            DtoProduct response = new DtoProduct();
-            BeanUtils.copyProperties(dbProduct, response);
-            return response;
+        Product updateProduct = findProductOrThrow(id);
+        updateProduct.setName(dtoProductIU.getName());
+        updateProduct.setPrice(dtoProductIU.getPrice());
+        updateProduct.setStockAmount(dtoProductIU.getStockAmount());
+        updateProduct.setDescription(dtoProductIU.getDescription());
+        updateProduct.setImageUrl("imageURL");
+        Brand productBrand = new Brand();
+        productBrand.setId(dtoProductIU.getBrandId());
+        updateProduct.setBrand(productBrand);
+        Category productCategory = new Category();
+        productCategory.setId(dtoProductIU.getCategoryId());
+        updateProduct.setCategory(productCategory);
+        Product dbProduct = this.productRepository.save(updateProduct);
+        DtoProduct response = new DtoProduct();
+        BeanUtils.copyProperties(dbProduct, response);
+        response.setBrandId(dbProduct.getBrand().getId());
+        response.setCategoryId(dbProduct.getCategory().getId());
+        return response;
 
-        }
-        return null;
+
     }
 
     @Override
     public void delete(int id) {
+        findProductOrThrow(id);
         this.productRepository.deleteById(id);
     }
 
+    private Product findProductOrThrow(int id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(id))));
+    }
 
 }

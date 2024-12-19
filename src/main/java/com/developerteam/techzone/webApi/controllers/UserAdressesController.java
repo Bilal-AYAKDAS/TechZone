@@ -2,6 +2,8 @@ package com.developerteam.techzone.webApi.controllers;
 
 import com.developerteam.techzone.business.abstracts.IUserAdressService;
 import com.developerteam.techzone.entities.concreates.UserAdress;
+import com.developerteam.techzone.entities.dto.DtoUserAdress;
+import com.developerteam.techzone.entities.dto.DtoUserAdressIU;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,13 +13,11 @@ import java.util.List;
 @RequestMapping("/api/useradresses")
 
 public class UserAdressesController{
-    private IUserAdressService userAdressesService;
 
     @Autowired
-    public UserAdressesController(IUserAdressService userAdressService) {
-        this.userAdressesService = userAdressService;
-    }
+    private IUserAdressService userAdressesService;
 
+    //Admin için
     @GetMapping("/getall")
     public List<UserAdress> getAll(){
         return this.userAdressesService.getAll();
@@ -33,14 +33,22 @@ public class UserAdressesController{
         return this.userAdressesService.getByUserId(userId);
     }
 
+
+    //Customer için
+
+    @GetMapping("/ownAdress")
+    public List<DtoUserAdress> getOwnAdress(){
+        return userAdressesService.getOwnAdressByUserId();
+    }
+
     @PostMapping("/add")
-    public UserAdress add (@RequestBody UserAdress userAdress){
-        return this.userAdressesService.add(userAdress);
+    public DtoUserAdress add (@RequestBody DtoUserAdressIU dtoUserAdressIU){
+        return this.userAdressesService.add(dtoUserAdressIU);
     }
 
     @PutMapping("/update/{id}")
-    public UserAdress update(@PathVariable int id,@RequestBody UserAdress userAdress){
-        return this.userAdressesService.update(id,userAdress);
+    public DtoUserAdress update(@PathVariable int id, @RequestBody DtoUserAdressIU dtoUserAdressIU){
+        return this.userAdressesService.update(id,dtoUserAdressIU);
     }
 
     @DeleteMapping("/delete/{id}")
