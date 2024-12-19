@@ -11,6 +11,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,25 +30,56 @@ class UserManagerTest {
     }
 
     @Test
-    void getAll() {
+    void testGetAll() {
+        List<User> users = userManager.getAll();
+        assertNotNull(users);
+        assertEquals(2, users.size());
+        assertEquals("Zeynep", users.get(0).getFirstName());
+        assertEquals("Can", users.get(1).getLastName());
+        assertEquals(23,users.get(0).getAge());
+        assertEquals("password", users.get(0).getPassword());
+        assertEquals("zeynepkaya@gmail.com", users.get(0).getEmail());
     }
 
     @Test
-    void getById() {
+    void testGetById() {
+        User user = userManager.getById(1);
+        assertNotNull(user);
+        assertEquals("Zeynep", user.getFirstName());
+        assertEquals("Kaya", user.getLastName());
+        assertEquals(23, user.getAge());
+        assertEquals("password", user.getPassword());
+        assertEquals("zeynepkaya@gmail.com", user.getEmail());
     }
 
     @Test
-    void getByEmail() {
+    void testGetByEmail() {
+        User user = userManager.getByEmail("mehmetcan@gmail.com");
+        assertNotNull(user);
+        assertEquals("Mehmet", user.getFirstName());
+        assertEquals("Can", user.getLastName());
+        assertEquals(30, user.getAge());
+        assertEquals("mehmetcan", user.getPassword());
+        assertEquals("1111111", user.getPhoneNumber());
+        assertEquals(2, user.getId());
     }
 
     @Test
-    void getByEmailAndPassword() {
+    void testGetByEmailAndPassword() {
+        User user = userManager.getByEmailAndPassword("mehmetcan@gmail.com", "mehmetcan");
+        assertNotNull(user);
+        assertEquals("Mehmet", user.getFirstName());
+        assertEquals("Can", user.getLastName());
+        assertEquals(30, user.getAge());
+        assertEquals("mehmetcan", user.getPassword());
+        assertEquals("1111111", user.getPhoneNumber());
+        assertEquals(2, user.getId());
     }
 
     @Test
     @Transactional
     @Rollback(false)
-    void add() {
+    void testAdd() {
         User user = new User();
         user.setFirstName("Zeynep");
         user.setLastName("Kaya");
@@ -55,6 +87,8 @@ class UserManagerTest {
         user.setEmail("zeynepkaya@gmail.com");
         user.setPhoneNumber("5555555");
         user.setPassword("password");
+        user.setCreatedAt(new Date());
+        Date createdAt = user.getCreatedAt();
 
         User savedUser = userManager.add(user);
 
@@ -71,8 +105,6 @@ class UserManagerTest {
         //test password
         assertEquals("password", savedUser.getPassword());
         //test date
-        user.setCreatedAt(new Date());
-        Date createdAt = user.getCreatedAt();
         assertEquals(createdAt, savedUser.getCreatedAt());
 
         //Register is correct
@@ -88,11 +120,45 @@ class UserManagerTest {
     }
 
     @Test
-    void update() {
+    @Transactional
+    @Rollback(false)
+    void testUpdate() {
+        User user = new User();
+        user.setFirstName("Mehmet");
+        user.setLastName("Can");
+        user.setAge(30);
+        user.setEmail("mehmetcan@gmail.com");
+        user.setPhoneNumber("1111111");
+        user.setPassword("mehmetcan");
+        user.setCreatedAt(new Date());
 
+        User updatedUser = userManager.update(2, user);
+
+        assertNotNull(updatedUser);
+        assertEquals("Mehmet", updatedUser.getFirstName());
+        assertEquals("Can", updatedUser.getLastName());
+        assertEquals(30, updatedUser.getAge());
+        assertEquals("mehmetcan@gmail.com", updatedUser.getEmail());
+        assertEquals("1111111", updatedUser.getPhoneNumber());
+        assertEquals("mehmetcan", updatedUser.getPassword());
+
+        User foundUser = userRepository.findById(updatedUser.getId()).orElse(null);
+        assertNotNull(foundUser);
+        assertEquals(updatedUser.getFirstName(), foundUser.getFirstName());
+        assertEquals(updatedUser.getLastName(), foundUser.getLastName());
+        assertEquals(updatedUser.getAge(), foundUser.getAge());
+        assertEquals(updatedUser.getEmail(), foundUser.getEmail());
+        assertEquals(updatedUser.getPhoneNumber(), foundUser.getPhoneNumber());
+        assertEquals(updatedUser.getPassword(), foundUser.getPassword());
     }
 
     @Test
-    void delete() {
+    @Transactional
+    @Rollback(false)
+    void testDelete() {
+        User user =userRepository.getById(3);
+        assertNotNull(user);
+        userRepository.delete(user);
+
     }
 }
