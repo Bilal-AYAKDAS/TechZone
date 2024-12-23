@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Sayfa - Technology Store </title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ana Sayfa - Technology Store </title>
+  <link rel="shortcut icon" href="#">
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="./bootstrap/bootstrap.min.css" rel="stylesheet">
 
   <!-- Font Awesome -->
-  <link href="./fontawesome-6.6.0-css/css/all.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
   <!-- CSS Dosyası -->
   <link href="./css/style.css" rel="stylesheet">
@@ -18,220 +19,96 @@
 
 
 
-      <!-- Bootstrap JS ve bağımlılıkları
-      <script src="./jquery.ui/jquery-3.7.1.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-      <script src="./bootstrap/bootstrap.bundle.min.js"></script>
-      -->
-      <!-- Bootstrap CSS -->
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <!-- Bootstrap JS ve bağımlılıkları
+  <script src="./jquery.ui/jquery-3.7.1.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="./bootstrap/bootstrap.bundle.min.js"></script>
+  -->
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-      <!-- jQuery -->
-      <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
-      <!-- Popper.js -->
+  <!-- Popper.js -->
 
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-      <!-- Bootstrap JS -->
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
 
 
-  <script>
-    $(document).ready(function () {
-      let selectedCategoryIds = []; // Seçili kategori ID'leri
-      let selectedBrandIds = []; // Seçili marka ID'leri
 
-      // Kategorileri yükle
-      $.ajax({
-        url: 'http://localhost:8080/api/categories/getall',
-        type: 'GET',
-        success: function (categories) {
-          const categoryRow = $('#categoryRow');
-          categories.forEach(category => {
-            const categoryCard = $(`
-            <div class="category-card">
-              <input type="checkbox" class="category-checkbox" data-category-id="${category.id}"> ${category.name}
-            </div>
-          `);
-            categoryCard.find('input').on('change', function () {
-              const categoryId = $(this).data('category-id');
-              if (this.checked) {
-                selectedCategoryIds.push(categoryId);
-              } else {
-                selectedCategoryIds = selectedCategoryIds.filter(id => id !== categoryId);
-              }
-              loadProducts(); // Ürünleri yükle
-            });
-            categoryRow.append(categoryCard);
-          });
-        },
-        error: function (error) {
-          console.error('Kategoriler yüklenirken hata:', error);
-        }
-      });
-
-      // Markaları yükle
-      $.ajax({
-        url: 'http://localhost:8080/api/brands/getall',
-        type: 'GET',
-        success: function (brands) {
-          const brandList = $('#brandList');
-          brands.forEach(brand => {
-            const brandItem = $(`
-            <div class="brand-item">
-              <input type="checkbox" class="brand-checkbox" data-brand-id="${brand.id}"> ${brand.name}
-            </div>
-          `);
-            brandItem.find('input').on('change', function () {
-              const brandId = $(this).data('brand-id');
-              if (this.checked) {
-                selectedBrandIds.push(brandId);
-              } else {
-                selectedBrandIds = selectedBrandIds.filter(id => id !== brandId);
-              }
-              loadProducts(); // Ürünleri yükle
-            });
-            brandList.append(brandItem);
-          });
-
-          $('#brands').show(); // Markalar bölümünü göster
-        },
-        error: function (error) {
-          console.error('Markalar yüklenirken hata:', error);
-        }
-      });
-
-      // Ürünleri yüklemek için kullanılan fonksiyon
-      function loadProducts() {
-        const productTableBody = $('#products table tbody');
-
-        // Ürünler tablosunu görünür yapıyoruz
-        $('#products').show();
-
-        // Eski ürünleri temizlememek için, önce ekranda var olanları saklıyoruz.
-        const oldProducts = productTableBody.children();
-        productTableBody.empty(); // Önce tablonun içeriğini boşaltıyoruz
-
-        let apiUrls = [];
-
-        if (selectedCategoryIds.length > 0 && selectedBrandIds.length > 0) {
-          // Hem kategori hem marka seçildiyse, her kategori ve marka kombinasyonunu ekle
-          selectedCategoryIds.forEach((categoryId) => {
-            selectedBrandIds.forEach((brandId) => {
-              apiUrls.push(`http://localhost:8080/api/products/getByCategoryIdAndBrandId/${categoryId}/${brandId}`);
-            });
-          });
-        } else if (selectedCategoryIds.length > 0) {
-          // Sadece kategori seçildiyse, her kategori için URL oluştur
-          selectedCategoryIds.forEach((categoryId) => {
-            apiUrls.push(`http://localhost:8080/api/products/getByCategoryId/${categoryId}`);
-          });
-        } else if (selectedBrandIds.length > 0) {
-          // Sadece marka seçildiyse, her marka için URL oluştur
-          selectedBrandIds.forEach((brandId) => {
-            apiUrls.push(`http://localhost:8080/api/products/getByBrandId/${brandId}`);
-          });
-        } else {
-          // Hiçbir seçim yapılmadıysa tüm ürünleri getir
-          apiUrls.push('http://localhost:8080/api/products/getall');
-        }
-
-        // API çağrılarını tek tek yap ve gelen veriyi ekrana ekle
-        apiUrls.forEach((url) => {
-          $.ajax({
-            url: url,
-            type: 'GET',
-            success: function (products) {
-              products.forEach(product => {
-                const tr = $(`
-                <tr>
-                  <td>${product.name}</td>
-                  <td>${product.price}</td>
-                  <td>${product.description}</td>
-                </tr>
-              `);
-                productTableBody.append(tr); // Ürünleri tabloya ekle
-              });
-            },
-            error: function (error) {
-              console.error('Ürünler yüklenirken hata:', error);
-            }
-          });
-        });
-      }
-    });
-
-  </script>
 
 </head>
 <body>
+<script src = "js/source.js"></script>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 
-      <a class="navbar-brand" href="#">
-        <img src="img/logo.png" style="margin-top:-13px;margin-bottom: -11px; height: 60px;" alt="Logo">
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/main">Ana Sayfa</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Giriş</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Hakkımızda</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">İletişim</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link"><i class="fa-solid fa-cart-shopping"></i></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link"><i class="fa-solid fa-heart"></i></a>
-          </li>
-        </ul>
-      </div>
-  </nav>
 
-  <div class="container mt-5">
-    <div class="row">
-      <!-- Kategoriler -->
-      <div class="col-md-3" id="categoryRow">
-        <!-- Dinamik Kategoriler Buraya Yüklenecek -->
-      </div>
 
-      <!-- Markalar -->
-      <div class="col-md-3" id="brandList" style="display: flex; flex-direction: column;">
-        <!-- Dinamik Markalar Buraya Yüklenecek -->
-      </div>
 
-      <!-- Ürün Tablosu -->
-      <div class="col-md-6" id="products" style="display: none;">
-        <table class="table table-bordered">
-          <thead>
-          <tr>
-            <th>Ürün Adı</th>
-            <th>Fiyat</th>
-            <th>Açıklama</th>
-          </tr>
-          </thead>
-          <tbody>
-          <!-- Dinamik Ürünler Buraya Eklenecek -->
-          </tbody>
-        </table>
-      </div>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+  <a class="navbar-brand" href="#">
+    <img src="img/logo.png" style="margin-top:-13px;margin-bottom: -11px; height: 60px;" alt="Logo">
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="index.html">Ana Sayfa</a>
+      </li>
+      <li class="nav-item" id="navbar-login">
+        <!-- Giriş butonu veya profil linki buraya dinamik olarak eklenir -->
+      </li>
+      <li class="nav-item" id="logout-btn" style="display: none;">
+        <a href="#" class="btn btn-danger rounded-pill py-2 px-4" onclick="logout()">Çıkış Yap</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="about.html">Hakkımızda</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="Contact.html">İletişim</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="favorites.html"><i class="fa-solid fa-heart"></i></a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container mt-5" style="margin-top: 5rem !important; margin-bottom: 10px !important;">
+  <div class="row">
+    <!-- Kategoriler -->
+    <div class="col-md-3" id="categoryRow">
+      <!-- Dinamik Kategoriler Buraya Yüklenecek -->
+    </div>
+
+    <!-- Markalar -->
+    <div class="col-md-3" id="brandList" style="display: flex; flex-direction: column;">
+      <!-- Dinamik Markalar Buraya Yüklenecek -->
+    </div>
+
+    <!-- Ürün Tablosu -->
+    <div class="row" id="productGrid">
+      <!-- Dinamik Ürünler Buraya Eklenecek -->
     </div>
   </div>
+</div>
+
+
+
+
 
 </body>
 </html>
