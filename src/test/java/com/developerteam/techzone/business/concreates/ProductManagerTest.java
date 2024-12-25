@@ -10,6 +10,7 @@ import com.developerteam.techzone.entities.dto.DtoBrand;
 import com.developerteam.techzone.entities.dto.DtoCategory;
 import com.developerteam.techzone.entities.dto.DtoProduct;
 import com.developerteam.techzone.entities.dto.DtoProductIU;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class ProductManagerTest {
 
+    @Autowired
     private ProductManager productManager;
 
     @Autowired
@@ -40,10 +42,6 @@ class ProductManagerTest {
     @Autowired
     private CategoryManager categoryManager;
 
-    @BeforeEach
-    void setUp() {
-        productManager = new ProductManager(productRepository);
-    }
 
     @Test
     void testGetById() {
