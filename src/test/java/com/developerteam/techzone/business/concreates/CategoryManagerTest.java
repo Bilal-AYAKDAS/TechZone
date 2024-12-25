@@ -21,19 +21,16 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Service
+@SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CategoryManagerTest {
 
+    @Autowired
     private CategoryManager categoryManager;
 
     @Autowired
     private ICategoryRepository categoryRepository;
 
-    @BeforeEach
-    void setUp() {
-        categoryManager = new CategoryManager(categoryRepository);
-    }
 
     @Test
     void testGetAll() {
