@@ -14,11 +14,6 @@ public class UserManager implements IUserService {
 
     private IUserRepository userRepository;
 
-    @Autowired
-    public UserManager(IUserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Override
     public List<User> getAll() {
         return this.userRepository.findAll();
