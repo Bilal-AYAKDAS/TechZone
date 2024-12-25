@@ -22,10 +22,6 @@ public class BrandManager implements IBrandService {
     @Autowired
     private IBrandRepository brandRepository;
 
-    public BrandManager(IBrandRepository brandRepository) {
-        this.brandRepository = brandRepository;
-    }
-
     @Override
     public List<DtoBrand> getAll() {
         List<Brand> brands = brandRepository.findAll();
