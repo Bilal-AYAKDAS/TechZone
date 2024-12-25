@@ -21,18 +21,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Service
+@SpringBootTest
 class BrandManagerTest {
 
     @Autowired
     private IBrandRepository brandRepository; // Gerçek repository
 
+    @Autowired
     private BrandManager brandManager;
-
-    @BeforeEach
-    void setUp() {
-        brandManager = new BrandManager(brandRepository); // Manuel nesne oluşturma
-    }
 
     @Test
     void testGetAll() {
@@ -55,7 +51,7 @@ class BrandManagerTest {
     @Rollback(false)
     void testAdd() {
         DtoBrandIU dtoBrandIU = new DtoBrandIU();
-        dtoBrandIU.setName("Apple");
+        dtoBrandIU.setName("Xiaomi");
 
         // Act
         assertNotNull(dtoBrandIU);
@@ -63,11 +59,11 @@ class BrandManagerTest {
 
         // Assert
         assertNotNull(result, "Result should not be null.");
-        assertEquals("Apple", result.getName());
+        assertEquals("Xiaomi", result.getName());
 
 
         // Database control
-        Brand savedBrand = brandRepository.getById(1);
+        Brand savedBrand = brandRepository.getById(6);
         assertNotNull(savedBrand, "Saved brand should not be null.");
         assertEquals(result.getName(), savedBrand.getName());
     }
@@ -77,16 +73,16 @@ class BrandManagerTest {
     @Rollback(false)
     void testUpdate() {
         DtoBrandIU updatedBrand = new DtoBrandIU();
-        updatedBrand.setName("hp");
+        updatedBrand.setName("Realme");
 
 
-        DtoBrand updating = brandManager.update(2, updatedBrand);
+        DtoBrand updating = brandManager.update(6, updatedBrand);
 
         assertNotNull(updating);
-        assertEquals("hp", updating.getName());
+        assertEquals("Realme", updating.getName());
 
         //Database control
-        Brand foundBrand = brandRepository.getById(2);
+        Brand foundBrand = brandRepository.getById(6);
         assertEquals(updatedBrand.getName(), foundBrand.getName());
     }
 
@@ -98,5 +94,10 @@ class BrandManagerTest {
         assertNotNull(brand);
         brandRepository.delete(brand);
     }
+
+//    @Test
+//    void testFindBrandOrThrow() {
+//        Brand result = brandManager.findBrandOrThrow()
+//    }
   
 }
