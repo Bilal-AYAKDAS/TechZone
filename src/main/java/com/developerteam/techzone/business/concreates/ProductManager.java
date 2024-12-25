@@ -24,10 +24,6 @@ public class ProductManager implements IProductService {
     @Autowired
     private IProductRepository productRepository;
 
-    public ProductManager(IProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
-
     @Override
     public DtoProduct getById(int id) {
         Product product = findProductOrThrow(id);
