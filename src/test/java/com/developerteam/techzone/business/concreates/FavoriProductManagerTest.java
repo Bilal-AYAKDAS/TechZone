@@ -52,12 +52,12 @@ class FavoriProductManagerTest {
     private FavoriProductManager favoriProductManager;
 
 
-    @BeforeEach
+    /*@BeforeEach
     void setUp() {
         //favoriProductManager = new FavoriProductManager(favoriProductRepository, authService);
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("zeynepkaya@gmail.com", null, List.of()));
-    }
+    }*/
 
 
     @Test
