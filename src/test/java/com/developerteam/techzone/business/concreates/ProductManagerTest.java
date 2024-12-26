@@ -206,4 +206,17 @@ class ProductManagerTest {
         assertNotNull(product);
         productRepository.delete(product);
     }
+
+    @Test
+    void testFindProductOrThrow() {
+        Product result = productManager.findProductOrThrow(2);
+
+        assertNotNull(result);
+        assertEquals(2, result.getId(), "The category ID should match.");
+        assertEquals("Iphone 11 pro", result.getName());
+        assertEquals(25000, result.getPrice());
+        assertEquals(2, result.getStockAmount());
+        assertEquals(1, result.getBrand().getId());
+        assertEquals(2, result.getCategory().getId());
+    }
 }
