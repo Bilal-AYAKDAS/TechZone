@@ -13,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DtoBrandIU {
 
-    @Size(min = 2, max = 10, message = "Brand name must be between 2 and 14 characters.")
+    @Size(min = 2, max = 10, message = "Brand name must be between 2 and 12 characters.")
     private String name;
 }
