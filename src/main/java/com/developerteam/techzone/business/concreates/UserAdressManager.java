@@ -8,6 +8,10 @@ import com.developerteam.techzone.entities.concreates.User;
 import com.developerteam.techzone.entities.concreates.UserAdress;
 import com.developerteam.techzone.entities.dto.DtoUserAdress;
 import com.developerteam.techzone.entities.dto.DtoUserAdressIU;
+import com.developerteam.techzone.exception.BaseException;
+import com.developerteam.techzone.exception.ErrorMessage;
+import com.developerteam.techzone.exception.MessageType;
+import com.developerteam.techzone.exception.UserNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,14 +94,18 @@ public class UserAdressManager  implements IUserAdressService {
         Optional<User> optionalUser = authService.getAuthenticatedUser();
 
         if(existingUserAdress.isEmpty()){
-            return null;
+            new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(id)));
         }
 
         if (optionalUser.isEmpty()) {
-            return null;
+            throw new UserNotFoundException(
+                    new ErrorMessage(MessageType.USER_NOT_FOUND, "User does not exist.")
+            );
         }
         if (!currentAdressHasUser(optionalUser.get(), existingUserAdress.get())) {
-            return null;
+            throw new UserNotFoundException(
+                    new ErrorMessage(MessageType.USER_NOT_FOUND, "Adres has not this user.")
+            );
         }
 
         UserAdress userAdress = new UserAdress();
