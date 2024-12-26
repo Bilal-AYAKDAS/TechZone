@@ -70,7 +70,7 @@ public class BrandManager implements IBrandService {
         brandRepository.deleteById(id);
     }
 
-    private Brand findBrandOrThrow(int id) {
+    public Brand findBrandOrThrow(int id) {
         return brandRepository.findById(id)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(id))));
     }
