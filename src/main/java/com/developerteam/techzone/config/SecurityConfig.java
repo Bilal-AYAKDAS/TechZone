@@ -38,7 +38,7 @@ public class SecurityConfig {
         http.csrf(csrf->csrf.disable())
                 .authorizeHttpRequests(requests ->
                         requests
-                                .requestMatchers("/static/*","/bootstrap/*","/fontawesome-6.6.0-css/*","/jquery.ui/*", "/css/*", "/js/*", "/img/*","/*.html","/*.css","/*.js").permitAll()
+                                .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**", "/bootstrap/**","/img/**","/webjars/**", "*.html").permitAll()
                                 .requestMatchers(AUTHENTICATE, REGISTER,REFRESH_TOKEN,PRODUCTS,CATEGORY,BRANDS)
                                 .permitAll()
                                 .anyRequest()

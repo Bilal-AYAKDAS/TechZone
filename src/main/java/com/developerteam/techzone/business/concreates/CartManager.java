@@ -93,10 +93,18 @@ public class CartManager implements ICartService {
         }
         CartItem cartItem = new CartItem();
         cartItem.setCart(userCart);
-        cartItem.setQuantity(dtoCartItemIU.getQuantity());
-        Product product = new Product();
-        product.setId(dtoCartItemIU.getProductId());
-        cartItem.setProduct(product);
+        // Aynı Product Userın Catında Bulunuyor mu
+        Optional <CartItem> optionalCartItem = cartItemRepository.findByCartIdAndProductId(userCart.getId(),dtoCartItemIU.getProductId());
+        if (optionalCartItem.isEmpty()){
+            cartItem.setQuantity(dtoCartItemIU.getQuantity());
+            Product product = new Product();
+            product.setId(dtoCartItemIU.getProductId());
+            cartItem.setProduct(product);
+        }else{
+            cartItem = optionalCartItem.get();
+            cartItem.setQuantity(optionalCartItem.get().getQuantity() + dtoCartItemIU.getQuantity());
+        }
+
         CartItem savedCartItem = cartItemRepository.save(cartItem);
         DtoCartItem dtoCartItem = new DtoCartItem();
         dtoCartItem.setId(savedCartItem.getId());
