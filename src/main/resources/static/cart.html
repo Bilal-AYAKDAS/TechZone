@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Sepetim</title>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="#">
+
+    <link rel="stylesheet" href="jquery.ui/jquery-ui.css" type="text/css" media="screen, projection"/>
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" type="text/css" media="screen, projection"/>
+    <script type="text/javascript" src="./jquery.ui/jquery-3.7.1.js"></script>
+    <script type="text/javascript" src="./jquery.ui/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function () {
+            const userId = localStorage.getItem('accessToken');
+            // Sepet verilerini getOwnCart API'sinden çek
+            $.ajax({
+                url: 'http://localhost:8080/api/cart/getOwnCart', // API endpoint
+                type: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${userId}` // Token'ı Authorization başlığına ekle
+                },
+                success: function (cartItems) {
+                    const cartTableBody = $('#cartTableBody'); // Tablo gövdesi
+                    let totalPrice = 0; // Toplam fiyat
+                    let count = 1; // Satır numarası
+
+                    // Her bir sepet öğesini işleme
+                    cartItems.forEach(item => {
+                        const product = item.product; // Ürün bilgileri
+                        const quantity = item.quantity; // Adet
+                        const total = product.price * quantity; // Toplam fiyat hesaplama
+
+                        totalPrice += total; // Genel toplamı güncelle
+
+                        // Tabloya satır ekleme
+                        const row = `
+                    <tr>
+                        <td>${count++}</td>
+                        <td>${product.name}</td>
+                        <td>${product.price} TL</td>
+                        <td>${quantity}</td>
+                        <td>${total} TL</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="removeCartItem(${item.id})">Sil</button>
+                        </td>
+                    </tr>
+                `;
+                        cartTableBody.append(row); // Satırı tabloya ekle
+                    });
+
+                    // Toplam fiyatı ekranda göster
+                    $('#totalPrice').text(`Toplam: ${totalPrice} TL`);
+                },
+                error: function () {
+                    alert('Sepet bilgileri alınırken bir hata oluştu.');
+                }
+            });
+        });
+
+        // Sepet ürününü sil
+        function removeCartItem(cartItemId) {
+            const userId = localStorage.getItem('accessToken'); // Token alınmalı
+            $.ajax({
+                url: `http://localhost:8080/api/cart/deleteCartItem/${cartItemId}`, // Silme API'si
+                type: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${userId}` // Yetkilendirme başlığı
+                },
+                success: function () {
+                    alert('Ürün sepetten kaldırıldı.');
+                    location.reload(); // Sayfayı yenile
+                },
+                error: function () {
+                    alert('Ürün silinirken bir hata oluştu.');
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="breadcrumb"><a href="index.html">Home</a><span class="sep" >></span>Sepetim</div>
+    <h1 class="mb-4">Sepetim</h1>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Ürün Adı</th>
+            <th>Fiyat</th>
+            <th>Adet</th>
+            <th>Toplam</th>
+            <th>Sil</th>
+        </tr>
+        </thead>
+        <tbody id="cartTableBody">
+        <!-- Dinamik içerik buraya eklenecek -->
+        </tbody>
+    </table>
+    <div class="text-end">
+        <h4 id="totalPrice">Toplam: 0 TL</h4>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="./jquery.ui/jquery-ui.js"></script>
+
+</body>
+</html>
