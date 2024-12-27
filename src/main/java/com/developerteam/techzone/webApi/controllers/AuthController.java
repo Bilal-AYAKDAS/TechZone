@@ -8,6 +8,7 @@ import com.developerteam.techzone.jwt.AuthResponse;
 import com.developerteam.techzone.jwt.RefreshTokenRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,5 +35,9 @@ public class AuthController {
     @PostMapping("/refreshToken")
     public AuthResponse refreshToken(@RequestBody RefreshTokenRequest request) {
         return refreshTokenService.refreshToken(request);
+    }
+    @GetMapping("/getUserType")
+    public String getUserType() {
+        return authService.getUserType();
     }
 }

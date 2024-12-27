@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana Sayfa</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <!-- Bootstrap JS ve bağımlılıkları -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+
+        const openEdit = (id) => {
+            window.location.href = `/admin/adminBrandsEdit.html/${id}`;
+        }
+
+        // HTML Kısmı (Bootstrap Table)
+        // Aşağıdaki script, jQuery ile bir Bootstrap tablosu oluşturur ve API'den gelen verileri doldurur.
+        const getAllBrands = () => {
+            // API'den veri çekme işlemi
+            $.ajax({
+                url: "../api/brands/getall", // API endpoint URL
+                method: "GET",
+                dataType: "json",
+                success: function (data) {
+                    // Tabloyu oluşturma
+                    let tableHtml;
+
+                    // API'den gelen verilerle tabloyu doldurma
+                    data.forEach((brand, index) => {
+                        tableHtml += `<tr>
+                    <td>${index + 1}</td>
+                    <td>${brand.name}</td>
+                    <td>
+                        <button class="btn btn-primary edit-btn" onclick=openEdit(${brand.id})>
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger delete-btn" onclick=deleteBrands(${brand.id})>
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
+                    });
+
+                    // Oluşturulan tabloyu div'e ekleme
+                    $("#brandTblBody").html(tableHtml);
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("API Hatası: ", error);
+                    $(".content").html("<p>Veri yüklenirken bir hata oluştu!</p>");
+                }
+            });
+        };
+
+
+        const deleteBrands = (id) => {
+            const  accessToken = localStorage.getItem("accessToken");
+
+            if (confirm("Bu öğeyi silmek istediğinizden emin misiniz?")) {
+                $.ajax({
+                    url: `http://localhost:8080/api/brands/delete/${id}`,
+                    method: "DELETE",
+                    headers: {'Authorization': `Bearer ${accessToken}`},
+                    success: function () {
+                        alert("Öğe başarıyla silindi.");
+                        getAllBrands(); // Tabloyu yenile
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Silme Hatası: ", error);
+                        alert("Silme işlemi başarısız oldu.");
+                    }
+                });
+            }
+        };
+
+        $(document).ready(function () {
+            getAllBrands();
+        });
+
+
+    </script>
+
+    <style>
+        body {
+            overflow: hidden; /* Sayfa kaydırılmasını engelle */
+        }
+        .divbody {
+            display: flex;
+            height: 100vh; /* Sayfanın tamamını kapsasın */
+        }
+        .sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            height: 100vh;
+            background-color: #343a40;
+            padding: 20px;
+        }
+        .sidebar .nav-link {
+            color: #fff;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #495057;
+        }
+        .sidebar .nav-link.active {
+            background-color: #495057;
+        }
+        .content {
+            padding: 20px;
+            width: 100%;
+            overflow-y: auto; /* Yalnızca içerik kısmı kaydırılabilir olsun */
+        }
+        .content .card {
+            width: 1200px; /* Kart genişliği */
+            height: 600px; /* Kart yüksekliği */
+        }
+    </style>
+
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Techzone</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Admin Site</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+<!-- Main layout: Sidebar ve içerik -->
+<div class="divbody">
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <h4 class="text-white">Menu</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="http://localhost:8080/admin/adminBrands">Brands</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="http://localhost:8080/admin/adminCategories">Categories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="http://localhost:8080/admin/adminProducts">Products</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="http://localhost:8080/admin/adminUsers">Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="http://localhost:8080/admin/adminOrders">Orders</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="content">
+        <table class="table table-bordered">;
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Brand Name</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="brandTblBody">
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

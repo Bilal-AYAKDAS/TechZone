@@ -31,6 +31,15 @@ public class OrdersController {
     }
 
 
+    @GetMapping("/getAdminAllOrders")
+    public List <DtoOrder> getAdminAllOrders(){
+        return orderService.getAllCustomersOrder();
+    }
+    @GetMapping("/getAdminOrder/{id}")
+    public DtoOrder getAdminAllOrders(@PathVariable int id){
+        return orderService.getByIdCustomersOrder(id);
+    }
+
 
 
 

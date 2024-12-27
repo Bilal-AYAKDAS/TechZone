@@ -63,6 +63,7 @@ public class AuthManager implements IAuthService {
         user.setEmail(newUser.getEmail());
         user.setPhoneNumber(newUser.getPhoneNumber());
         user.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+        user.setUserType("CUSTOMER");
         User savedUser = userRepository.save(user);
         BeanUtils.copyProperties(savedUser,dto);
         return dto;
@@ -75,5 +76,13 @@ public class AuthManager implements IAuthService {
         String userEmail = jwtService.getAuthenticatedUsername();
         Optional<User> optionalUser = userRepository.findByEmail(userEmail);
         return optionalUser;
+    }
+
+    @Override
+    public String getUserType(){
+        String userType = jwtService.getUserTypeFromToken();
+        System.out.println(userType);
+        return userType;
+
     }
 }

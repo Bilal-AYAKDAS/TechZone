@@ -26,7 +26,6 @@ class UserManagerTest {
     @Autowired
     private IUserRepository userRepository;
 
-
     @Test
     void testGetAll() {
         List<User> users = userManager.getAll();

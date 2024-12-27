@@ -2,6 +2,7 @@ package com.developerteam.techzone.webApi.controllers;
 
 import com.developerteam.techzone.business.abstracts.IUserService;
 import com.developerteam.techzone.entities.concreates.User;
+import com.developerteam.techzone.entities.dto.DtoUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +52,18 @@ public class UsersController {
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable int id){
         this.userService.delete(id);
+    }
+
+    //for customer
+
+    @GetMapping("/getOwnInfo")
+    public DtoUser getOwnInfo(){
+        return this.userService.getOwnInfo();
+    }
+
+    @PutMapping("/updateOwnInfo")
+    public DtoUser updateOwnInfo(@RequestBody DtoUser dtoUser){
+        return this.userService.updateOwnInfo(dtoUser);
     }
 
 }
