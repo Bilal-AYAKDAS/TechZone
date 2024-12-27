@@ -49,6 +49,7 @@ public class OrderManager implements IOrderService {
         return optionalUser.get();
     }
 
+
     @Override
     public List<DtoOrder> getAllOrders() {
         User user = findUserOrThrow();
@@ -134,6 +135,27 @@ public class OrderManager implements IOrderService {
 
 
     }
+
+    @Override
+    public List<DtoOrder> getAllCustomersOrder(){
+        List<Order> orderList = orderRepository.findAll();
+        List<DtoOrder> dtoOrders = new ArrayList<>();
+        for (Order order : orderList){
+            DtoOrder dtoOrder = new DtoOrder();
+            BeanUtils.copyProperties(order,dtoOrder);
+            dtoOrders.add(dtoOrder);
+        }
+        return dtoOrders;
+    }
+
+    @Override
+    public DtoOrder getByIdCustomersOrder(int id){
+        Order order =orderRepository.findById(id).get();
+        DtoOrder dtoOrder = new DtoOrder();
+        BeanUtils.copyProperties(order,dtoOrder);
+        return dtoOrder;
+    }
+
 
 
 

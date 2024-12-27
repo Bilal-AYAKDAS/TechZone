@@ -1,10 +1,14 @@
 package com.developerteam.techzone.jwt;
 
+import com.developerteam.techzone.dataAccess.abstracts.IUserRepository;
+import com.developerteam.techzone.entities.concreates.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -13,6 +17,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Component
@@ -20,10 +25,15 @@ public class JwtService {
 
     public static final String SECRET_KEY = "J4JB7uDLTWJlzLNr4bjKdI3lMqbuY0gkcNmNqD5fB7g=";
 
+    @Autowired
+    private IUserRepository userRepository;
+
     public String generateToken(UserDetails  userDetails) {
 
+        Optional <User> user =userRepository.findByEmail(userDetails.getUsername());
+
         Map<String,Object> claimsMap = new HashMap<>();
-        claimsMap.put("role", "ADMIN");
+        claimsMap.put("userType", user.get().getUserType());
 
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
@@ -43,7 +53,7 @@ public class JwtService {
     //User Role çekmek  için admin or normal user
     public  String getRoleFromToken(String token) {
         Claims claims = getClaimsFromToken(token);
-        return claims.get("role", String.class);
+        return claims.get("userType", String.class);
     }
 
     public  Claims getClaimsFromToken(String token) {
@@ -71,6 +81,15 @@ public class JwtService {
 
     public String getAuthenticatedUsername() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    public String getUserTypeFromToken() {
+        String userType = null;
+        for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
+            userType = authority.getAuthority();
+        }
+
+        return userType;
     }
 
 }

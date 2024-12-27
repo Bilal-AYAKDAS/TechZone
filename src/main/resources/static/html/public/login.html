@@ -3,11 +3,11 @@
     <head>
         <title> GİRİŞ</title>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="../static/css/table.css" type="text/css" media="screen, projection"/>
-        <link rel="stylesheet" href="jquery.ui/jquery-ui.css" type="text/css" media="screen, projection"/>
-        <link rel="stylesheet" href="bootstrap/bootstrap.min.css" type="text/css" media="screen, projection"/>
-        <script type="text/javascript" src="./jquery.ui/jquery-3.7.1.js"></script>
-        <script type="text/javascript" src="./jquery.ui/jquery-ui.js"></script>
+        <link rel="stylesheet" href="../../css/table.css" type="text/css" media="screen, projection"/>
+        <link rel="stylesheet" href="../../jquery.ui/jquery-ui.css" type="text/css" media="screen, projection"/>
+        <link rel="stylesheet" href="../../bootstrap/bootstrap.min.css" type="text/css" media="screen, projection"/>
+        <script type="text/javascript" src="../../jquery.ui/jquery-3.7.1.js"></script>
+        <script type="text/javascript" src="../../jquery.ui/jquery-ui.js"></script>
         <style>
             .divider:after,
             .divider:before {
@@ -26,6 +26,36 @@
             }
         </style>
         <script>
+            const getUserIndex = () => {
+                debugger;
+                const userToken = localStorage.getItem('accessToken');
+
+                let userType = "CUSTOMER";
+
+                    $.ajax({
+                        type: "GET",
+                        url: '/getUserType', // Backend endpoint'i
+                        headers: {'Authorization': `Bearer ${userToken}`},
+                        async: false,
+                        contentType: "application/json",
+                        success: function (response) {
+                           userType = response;
+
+                           if (userType == "ADMIN") {
+                                window.location.href ="http://localhost:8080/admin/adminMain";
+                            }else{
+                                window.location.href ="http://localhost:8080";
+                            }
+                        },
+                        error: function (xhr) {
+                            alert("Giriş başarısız: " + errorMessage);
+                        }
+                    });
+
+
+
+            }
+
             function kaydet() {
                 var email = $('#email').val();
                 var password = $('#password').val();
@@ -37,6 +67,7 @@
                         email: email,
                         password: password
                     }),
+                    async: false,
                     contentType: "application/json",
                     success: function (response) {
                         // Sunucudan dönen access ve refresh token'ları localStorage'a kaydet
@@ -45,7 +76,10 @@
                             localStorage.setItem('refreshToken', response.refreshToken);
 
                             alert("Giriş başarılı!");
-                            window.location.href = 'index.html'; // Ana sayfaya yönlendir
+                            getUserIndex();
+
+
+
                         } else {
                             alert("Giriş başarısız. Yeniden Deneyin");
                         }
@@ -70,7 +104,7 @@
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="breadcrumb"><a href="index.html">Home</a><span class="sep" >></span>Login</div>
                 <div class="col-md-9 col-lg-6 col-xl-5">
-                    <img src="img/logo.png"
+                    <img src="../../img/logo.png"
                          class="img-fluid" style = "max-width: 30%;" alt="Sample image"> <b>TechZone</b>
                 </div>
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">

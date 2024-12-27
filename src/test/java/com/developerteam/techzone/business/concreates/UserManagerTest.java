@@ -24,10 +24,10 @@ class UserManagerTest {
     @Autowired
     private IUserRepository userRepository;
 
-    @BeforeEach
+  /*  @BeforeEach
     void setUp() {
         userManager = new UserManager(userRepository);
-    }
+    }*/
 
     @Test
     void testGetAll() {

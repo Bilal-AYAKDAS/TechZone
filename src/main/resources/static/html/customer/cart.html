@@ -2,20 +2,22 @@
 <html lang="en">
 <head>
 
-    <title>Favorilerim</title>
+    <title>Sepetim</title>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="#">
 
-    <link rel="stylesheet" href="jquery.ui/jquery-ui.css" type="text/css" media="screen, projection"/>
-    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" type="text/css" media="screen, projection"/>
-    <script type="text/javascript" src="./jquery.ui/jquery-3.7.1.js"></script>
-    <script type="text/javascript" src="./jquery.ui/jquery-ui.js"></script>
+    <link rel="stylesheet" href="../../jquery.ui/jquery-ui.css" type="text/css" media="screen, projection"/>
+    <link rel="stylesheet" href="../../bootstrap/bootstrap.min.css" type="text/css" media="screen, projection"/>
+    <script type="text/javascript" src="../../jquery.ui/jquery-3.7.1.js"></script>
+    <script type="text/javascript" src="../../jquery.ui/jquery-ui.js"></script>
+
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="shortcut icon" href="#">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link href="./bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="../../bootstrap/bootstrap.min.css" rel="stylesheet">
 
     <!-- Font Awesome -->
 
@@ -62,53 +64,62 @@
     <script>
         $(document).ready(function () {
             const userId = localStorage.getItem('accessToken');
-
-            // Favori ürünleri getirmek için API çağrısı
+            // Sepet verilerini getOwnCart API'sinden çek
             $.ajax({
-                url: 'http://localhost:8080/api/favoriProducts/getall', // Favori ürünler API'si
+                url: 'http://localhost:8080/api/cart/getOwnCart', // API endpoint
                 type: 'GET',
                 headers: {
                     'Authorization': `Bearer ${userId}` // Token'ı Authorization başlığına ekle
                 },
-                success: function (favorites) {
-                    const favoritesTableBody = $('#favoritesTableBody'); // Tablo gövdesi
+                success: function (cartItems) {
+                    const cartTableBody = $('#cartTableBody'); // Tablo gövdesi
+                    let totalPrice = 0; // Toplam fiyat
                     let count = 1; // Satır numarası
 
-                    // Her bir favori ürünü işleme
-                    favorites.forEach(item => {
+                    // Her bir sepet öğesini işleme
+                    cartItems.forEach(item => {
                         const product = item.product; // Ürün bilgileri
+                        const quantity = item.quantity; // Adet
+                        const total = product.price * quantity; // Toplam fiyat hesaplama
+
+                        totalPrice += total; // Genel toplamı güncelle
 
                         // Tabloya satır ekleme
                         const row = `
-                        <tr>
-                            <td>${count++}</td>
-                            <td>${product.name}</td>
-                            <td>${product.price} TL</td>
-                            <td>
-                                <button class="btn btn-danger btn-sm" onclick="removeFavorite(${item.id})">Sil</button>
-                            </td>
-                        </tr>
-                        `;
-                        favoritesTableBody.append(row); // Satırı tabloya ekle
+                    <tr>
+                        <td>${count++}</td>
+                        <td>${product.name}</td>
+                        <td>${product.price} TL</td>
+                        <td>${quantity}</td>
+                        <td>${total} TL</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="removeCartItem(${item.id})">Sil</button>
+                        </td>
+                    </tr>
+                `;
+                        cartTableBody.append(row); // Satırı tabloya ekle
                     });
+
+                    // Toplam fiyatı ekranda göster
+                    $('#totalPrice').text(`Toplam: ${totalPrice} TL`);
                 },
                 error: function () {
-                    alert('Favori ürünler alınırken bir hata oluştu.');
+                    alert('Sepet bilgileri alınırken bir hata oluştu.');
                 }
             });
         });
 
-        // Favori ürünü sil
-        function removeFavorite(favoriProductId) {
+        // Sepet ürününü sil
+        function removeCartItem(cartItemId) {
             const userId = localStorage.getItem('accessToken'); // Token alınmalı
             $.ajax({
-                url: `http://localhost:8080/api/favoriProducts/delete/${favoriProductId}`, // Silme API'si
+                url: `http://localhost:8080/api/cart/deleteCartItem/${cartItemId}`, // Silme API'si
                 type: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${userId}` // Yetkilendirme başlığı
                 },
                 success: function () {
-                    alert('Ürün favorilerden kaldırıldı.');
+                    alert('Ürün sepetten kaldırıldı.');
                     location.reload(); // Sayfayı yenile
                 },
                 error: function () {
@@ -120,12 +131,11 @@
     </script>
 </head>
 <body>
-
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 
     <a class="navbar-brand" href="#">
-        <img src="img/logo.png" style="margin-top:-13px;margin-bottom: -11px; height: 60px;" alt="Logo">
+        <img src="../../img/logo.png" style="margin-top:-13px;margin-bottom: -11px; height: 60px;" alt="Logo">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -133,7 +143,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">Ana Sayfa</a>
+                <a class="nav-link" href="../public/index.html">Ana Sayfa</a>
             </li>
             <li class="nav-item" id="navbar-login">
                 <!-- Giriş butonu veya profil linki buraya dinamik olarak eklenir -->
@@ -142,7 +152,7 @@
                 <a href="#" class="btn btn-danger rounded-pill py-2 px-4" onclick="logout()">Çıkış Yap</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="about.html">Hakkımızda</a>
+                <a class="nav-link" href="../public/about.html">Hakkımızda</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="Contact.html">İletişim</a>
@@ -160,26 +170,32 @@
     </div>
 </nav>
 
+
 <div class="container mt-5">
-    <div class="breadcrumb" style="margin-top: 4rem;"><a href="index.html">Home</a><span class="sep">></span>Favorilerim</div>
-    <h1 class="mb-4">Favorilerim</h1>
+    <div class="breadcrumb" style="margin-top: 4rem;"><a href="../public/index.html"> Anasayfa </a><span class="sep" > > </span> Sepetim</div>
+    <h1 class="mb-4">Sepetim</h1>
     <table class="table table-bordered">
         <thead>
         <tr>
             <th></th>
             <th>Ürün Adı</th>
             <th>Fiyat</th>
+            <th>Adet</th>
+            <th>Toplam</th>
             <th>Sil</th>
         </tr>
         </thead>
-        <tbody id="favoritesTableBody">
+        <tbody id="cartTableBody">
         <!-- Dinamik içerik buraya eklenecek -->
         </tbody>
     </table>
+    <div class="text-end">
+        <h4 id="totalPrice">Toplam: 0 TL</h4>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="./jquery.ui/jquery-ui.js"></script>
+<script src="../../jquery.ui/jquery-ui.js"></script>
 
 </body>
 </html>
