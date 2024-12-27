@@ -22,9 +22,9 @@ public class UserManager implements IUserService {
     @Autowired
     private IUserRepository userRepository;
 
+
     @Autowired
     private IAuthService authService;
-
 
 
     @Override

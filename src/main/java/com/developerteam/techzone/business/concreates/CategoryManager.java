@@ -24,10 +24,6 @@ public class CategoryManager implements ICategoryService {
     @Autowired
     private ICategoryRepository categoryRepository;
 
-    public CategoryManager(ICategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
-
     @Override
     public List<DtoCategory> getAll() {
         List<Category> categories = categoryRepository.findAll();
@@ -75,7 +71,7 @@ public class CategoryManager implements ICategoryService {
         categoryRepository.deleteById(id);
     }
 
-    private Category findCategoryOrThrow(int id) {
+    public Category findCategoryOrThrow(int id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(id))));
     }
