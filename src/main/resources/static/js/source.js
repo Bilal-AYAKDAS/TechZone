@@ -5,16 +5,22 @@ $(document).ready(function () {
 
     if (accessToken) {
         // Kullanıcı giriş yapmışsa
-        $('#navbar-login').html('<a href="customer/profile" class="btn btn-success rounded-pill py-2 px-4">Profilim</a>');
+        $('#navbar-login').html('<a href="../customer/profile" class="btn btn-success rounded-pill py-2 px-4">Profilim</a>');
         $('#logout-btn').show(); // Çıkış butonunu göster
     } else {
         // Kullanıcı giriş yapmamışsa
-        $('#navbar-login').html('<a href="public/login" class="btn btn-primary rounded-pill py-2 px-4">Giriş Yap</a>');
+        $('#navbar-login').html('<a href="../public/login" class="btn btn-primary rounded-pill py-2 px-4">Giriş Yap</a>');
         $('#logout-btn').hide(); // Çıkış butonunu gizle
     }
 
-    // Favori veya Sepet ikonlarına tıklama olayını kontrol et
-    $('.fa-heart, .fa-cart-shopping').on('click', function (e) {
+    // Favori ve Sepet ikonlarına tıklama olayını kontrol et
+    $('.fa-heart').on('click', function (e) {
+        if (!localStorage.getItem('accessToken')) {
+            e.preventDefault(); // Sayfanın yönlendirilmesini durdur
+            alert('Lütfen önce giriş yapınız!');
+        }
+    });
+    $('.fa-cart-shopping').on('click', function (e) {
         if (!localStorage.getItem('accessToken')) {
             e.preventDefault(); // Sayfanın yönlendirilmesini durdur
             alert('Lütfen önce giriş yapınız!');
