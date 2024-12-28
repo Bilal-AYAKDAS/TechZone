@@ -53,7 +53,7 @@ public class ProductsController {
 
     @PostMapping(value = "/add", consumes = {"multipart/form-data"})
     public DtoProduct add (@RequestPart("product") @Valid DtoProductIU dtoProductIU,
-                           @RequestParam("file") MultipartFile file){
+                           @RequestParam(value = "file",required = false) MultipartFile file){
 
         return this.productService.add(dtoProductIU,file);
     }
@@ -61,7 +61,7 @@ public class ProductsController {
     @PutMapping(value = "/update/{id}", consumes = {"multipart/form-data"})
     public DtoProduct update(@PathVariable int id,
                              @RequestPart("product") @Valid DtoProductIU dtoProductIU,
-                             @RequestParam("file") MultipartFile file
+                             @RequestParam(value="file",required = false) MultipartFile file
                              ){
         return this.productService.update(id,dtoProductIU,file);
     }

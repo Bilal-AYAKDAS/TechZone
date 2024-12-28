@@ -151,21 +151,23 @@ public class ProductManager implements IProductService {
         productBrand.setId(dtoProductIU.getBrandId());
         product.setBrand(productBrand);
         Product dbProduct = this.productRepository.save(product);
+        Product product1 = dbProduct;
+        if (file != null) {
+            String originalFileName = file.getOriginalFilename();
+            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            String newFileName = dbProduct.getId() + extension;
+            String uploadDir = fileStorageProperties.getUploadDir();
+            Path filePath = Paths.get(uploadDir + newFileName);
 
-        String originalFileName = file.getOriginalFilename();
-        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        String newFileName = dbProduct.getId() + extension;
-        String uploadDir = fileStorageProperties.getUploadDir();
-        Path filePath = Paths.get(uploadDir+newFileName);
-        Product product1 =dbProduct;
-        try {
-            Files.createDirectories(filePath.getParent());
-            Files.write(filePath,file.getBytes());
-            product1 = this.productRepository.findById(dbProduct.getId()).get();
-            product1.setImageUrl("http://localhost:8080/uploads/" + newFileName);
-            this.productRepository.save(product1);
-        }catch (Exception e){
-            e.printStackTrace();
+            try {
+                Files.createDirectories(filePath.getParent());
+                Files.write(filePath, file.getBytes());
+                product1 = this.productRepository.findById(dbProduct.getId()).get();
+                product1.setImageUrl("http://localhost:8080/uploads/" + newFileName);
+                this.productRepository.save(product1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         DtoProduct response = new DtoProduct();
@@ -190,8 +192,9 @@ public class ProductManager implements IProductService {
         updateProduct.setCategory(productCategory);
 
 
-        String originalFileName = file.getOriginalFilename();
-        if (originalFileName != null) {
+
+        if (file != null) {
+            String originalFileName = file.getOriginalFilename();
             String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
             String newFileName = id + extension;
             String uploadDir = fileStorageProperties.getUploadDir();
