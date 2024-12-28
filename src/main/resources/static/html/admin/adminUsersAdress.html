@@ -13,37 +13,43 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
 
-        const openAdresList = (id) => {
-            window.location.href = `../admin/adminUsersAdress?id=${id}`;
-        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
 
         // HTML Kısmı (Bootstrap Table)
         // Aşağıdaki script, jQuery ile bir Bootstrap tablosu oluşturur ve API'den gelen verileri doldurur.
         const getAll = () => {
+            const accessToken = localStorage.getItem('accessToken');
+
             // API'den veri çekme işlemi
             $.ajax({
                 url: `/api/useradresses/getByUserId/${id}`,
                 method: "GET",
+                headers:  {'Authorization': `Bearer ${accessToken}`},
                 dataType: "json",
                 success: function (data) {
+                    console.log(data);
                     // Tabloyu oluşturma
                     let tableHtml;
                     // API'den gelen verilerle tabloyu doldurma
                     data.forEach((userAdress, index) => {
+                        console.log(userAdress.country);
                         tableHtml += `<tr>
                     <td>${index + 1}</td>
+                    <td>${userAdress.user.firstName}</td>
+                    <td>${userAdress.user.lastName}</td>
                     <td>${userAdress.country}</td>
                     <td>${userAdress.city}</td>
                     <td>${userAdress.district}</td>
                     <td>${userAdress.postCode}</td>
                     <td>${userAdress.adress}</td>
                     <td>
-                        <button class="btn btn-primary" onclick=openAdresList(${user.id})>
+                        <button class="btn btn-primary" onclick=openAdresList(${userAdress.id})>
                             <i class="fa fa-list-alt"></i>
                         </button>
                     </td>
                     <td>
-                        <button class="btn btn-danger delete-btn" onclick=deleteById(${user.id})>
+                        <button class="btn btn-danger delete-btn" onclick=deleteById(${userAdress.id})>
                             <i class="fa fa-trash"></i>
                         </button>
                     </td>
@@ -169,11 +175,13 @@
             <thead>
             <tr>
                 <th>#</th>
-                <th>Name</th>
-                <th>Lastname</th>
-                <th>Age</th>
-                <th>Email</th>
-                <th>Phone Number</th>
+                <th>User Name</th>
+                <th>User Lastname</th>
+                <th>Country</th>
+                <th>City</th>
+                <th>District</th>
+                <th>Post Code</th>
+                <th>Adress</th>
                 <th></th>
                 <th></th>
             </tr>
