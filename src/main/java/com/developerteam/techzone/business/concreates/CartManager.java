@@ -130,7 +130,7 @@ public class CartManager implements ICartService {
         cartRepository.deleteById(id);
     }
 
-    private Cart findCartOrThrow(int id) {
+    public Cart findCartOrThrow(int id) {
         return cartRepository.findById(id)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(id))));
     }
