@@ -22,21 +22,21 @@
         const getAll = () => {
             // API'den veri çekme işlemi
             $.ajax({
-                url: "/api/users/getall", // API endpoint URL
+                url: `/api/useradresses/getByUserId/${id}`,
                 method: "GET",
                 dataType: "json",
                 success: function (data) {
                     // Tabloyu oluşturma
                     let tableHtml;
                     // API'den gelen verilerle tabloyu doldurma
-                    data.forEach((user, index) => {
+                    data.forEach((userAdress, index) => {
                         tableHtml += `<tr>
                     <td>${index + 1}</td>
-                    <td>${user.firstName}</td>
-                    <td>${user.lastName}</td>
-                    <td>${user.age}</td>
-                    <td>${user.email}</td>
-                    <td>${user.phoneNumber}</td>
+                    <td>${userAdress.country}</td>
+                    <td>${userAdress.city}</td>
+                    <td>${userAdress.district}</td>
+                    <td>${userAdress.postCode}</td>
+                    <td>${userAdress.adress}</td>
                     <td>
                         <button class="btn btn-primary" onclick=openAdresList(${user.id})>
                             <i class="fa fa-list-alt"></i>
@@ -62,10 +62,9 @@
         };
 
         const deleteById = (id) => {
-            console.log(id)
             if (confirm("Bu öğeyi silmek istediğinizden emin misiniz?")) {
                 $.ajax({
-                    url: `../api/users/delete/${id}`,
+                    url: `./api/categories/delete/${id}`,
                     method: "DELETE",
                     success: function () {
                         alert("Öğe başarıyla silindi.");
