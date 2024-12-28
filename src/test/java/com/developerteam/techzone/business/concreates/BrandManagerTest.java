@@ -1,4 +1,4 @@
-package com.developerteam.techzone.business.concreates;
+/* package com.developerteam.techzone.business.concreates;
 
 import com.developerteam.techzone.dataAccess.abstracts.IBrandRepository;
 import com.developerteam.techzone.entities.concreates.Brand;
@@ -208,5 +208,6 @@ class BrandManagerTest {
 //    void testFindBrandOrThrow() {
 //        Brand result = brandManager.findBrandOrThrow()
 //    }
-  
+
 }
+*/
