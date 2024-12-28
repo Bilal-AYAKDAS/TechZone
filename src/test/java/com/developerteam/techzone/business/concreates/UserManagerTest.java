@@ -1,18 +1,23 @@
 package com.developerteam.techzone.business.concreates;
 
+import com.developerteam.techzone.business.abstracts.IAuthService;
 import com.developerteam.techzone.dataAccess.abstracts.IUserRepository;
 import com.developerteam.techzone.entities.concreates.User;
+import com.developerteam.techzone.entities.dto.DtoUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,6 +31,21 @@ class UserManagerTest {
     @Autowired
     private IUserRepository userRepository;
 
+    @Autowired
+    private IAuthService authService;
+
+    @BeforeEach
+    void setUp() {
+        /* for testUpdateOwnInfo
+        SecurityContextHolder.getContext().setAuthentication(
+
+                new UsernamePasswordAuthenticationToken("aysecelik@gmail.com", null, List.of())
+        ); */
+
+        //for testGetOwnInfo
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("yagmurozler@gmail.com", null, List.of()));
+    }
     @Test
     void testGetAll() {
         List<User> users = userManager.getAll();
@@ -157,5 +177,45 @@ class UserManagerTest {
         assertNotNull(user);
         userRepository.delete(user);
 
+    }
+
+    @Test
+    void testGetOwnInfo() {
+        DtoUser user = userManager.getOwnInfo();
+        assertNotNull(user);
+        assertEquals("Yağmur", user.getFirstName());
+        assertEquals("Özler", user.getLastName());
+        assertEquals(18, user.getAge());
+        assertEquals("yagmurozler@gmail.com", user.getEmail());
+        assertEquals("0000000", user.getPhoneNumber());
+
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    void testUpdateOwnInfo() {
+        DtoUser updateUser = new DtoUser();
+        updateUser.setFirstName("Yağmur");
+        updateUser.setLastName("Özler");
+        updateUser.setAge(18);
+        updateUser.setEmail("yagmurozler@gmail.com");
+        updateUser.setPhoneNumber("0000000");
+
+        DtoUser updatedUser = userManager.updateOwnInfo(updateUser);
+        assertNotNull(updatedUser);
+        assertEquals("Yağmur", updatedUser.getFirstName());
+        assertEquals("Özler", updatedUser.getLastName());
+        assertEquals(18, updatedUser.getAge());
+        assertEquals("yagmurozler@gmail.com", updatedUser.getEmail());
+        assertEquals("0000000", updatedUser.getPhoneNumber());
+
+        User foundUser = userRepository.findById(14).orElse(null);
+        assertNotNull(foundUser);
+        assertEquals(updatedUser.getFirstName(), foundUser.getFirstName());
+        assertEquals(updatedUser.getLastName(), foundUser.getLastName());
+        assertEquals(updatedUser.getAge(), foundUser.getAge());
+        assertEquals(updatedUser.getEmail(), foundUser.getEmail());
+        assertEquals(updatedUser.getPhoneNumber(), foundUser.getPhoneNumber());
     }
 }
