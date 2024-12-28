@@ -32,6 +32,7 @@ public class ProductManager implements IProductService {
         dtoProduct.setName(product.getName());
         dtoProduct.setPrice(product.getPrice());
         dtoProduct.setStockAmount(product.getStockAmount());
+        dtoProduct.setImageUrl(product.getImageUrl());
         dtoProduct.setDescription(product.getDescription());
         dtoProduct.setCategoryId(product.getCategory().getId());
         dtoProduct.setBrandId(product.getBrand().getId());

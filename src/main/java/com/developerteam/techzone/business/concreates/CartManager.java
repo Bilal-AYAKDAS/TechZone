@@ -5,6 +5,7 @@ import com.developerteam.techzone.business.abstracts.ICartService;
 import com.developerteam.techzone.dataAccess.abstracts.ICartItemRepository;
 import com.developerteam.techzone.dataAccess.abstracts.ICartRepository;
 import com.developerteam.techzone.entities.concreates.*;
+import com.developerteam.techzone.entities.dto.DtoCart;
 import com.developerteam.techzone.entities.dto.DtoCartItem;
 import com.developerteam.techzone.entities.dto.DtoCartItemIU;
 import com.developerteam.techzone.exception.BaseException;
@@ -62,7 +63,7 @@ public class CartManager implements ICartService {
     }
 
     @Override
-    public List<DtoCartItem> getOwnCart() {
+    public DtoCart getOwnCart() {
         Optional <User> optionalUser = authService.getAuthenticatedUser();
         Optional <Cart> optionalCart = cartRepository.findByUserId(optionalUser.get().getId());
         findCartOrThrow(optionalCart.get().getId());
@@ -76,7 +77,11 @@ public class CartManager implements ICartService {
             dtoCartItem.setProduct(cartItem.getProduct());
             dtoCartItems.add(dtoCartItem);
         }
-        return dtoCartItems;
+
+        DtoCart dtoCart = new DtoCart();
+        dtoCart.setId(optionalCart.get().getId());
+        dtoCart.setCartItems(dtoCartItems);
+        return dtoCart;
     }
 
     @Override

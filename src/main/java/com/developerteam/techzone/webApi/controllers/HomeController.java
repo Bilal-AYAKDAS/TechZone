@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HomeController {
@@ -21,7 +22,12 @@ public class HomeController {
     }
 
     @GetMapping("/admin/{page}")
-    public String adminPage(@PathVariable String page) {
+    public String adminPage(@PathVariable String page, @RequestParam(required = false) String id) {
+        // Eğer bir id parametresi varsa, sayfaya bunu ekleyerek yönlendirin
+        if (id != null) {
+            return "forward:/html/admin/" + page + ".html?id=" + id;
+        }
+        // Eğer id yoksa standart sayfa yönlendirmesi yapın
         return "forward:/html/admin/" + page + ".html";
     }
 
