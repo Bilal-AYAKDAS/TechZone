@@ -24,10 +24,6 @@ public class ProductManager implements IProductService {
     @Autowired
     private IProductRepository productRepository;
 
-    public ProductManager(IProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
-
     @Override
     public DtoProduct getById(int id) {
         Product product = findProductOrThrow(id);
@@ -53,6 +49,7 @@ public class ProductManager implements IProductService {
             dtoProduct.setPrice(product.getPrice());
             dtoProduct.setStockAmount(product.getStockAmount());
             dtoProduct.setDescription(product.getDescription());
+            dtoProduct.setImageUrl(product.getImageUrl());
             dtoProduct.setCategoryId(product.getCategory().getId());
             dtoProduct.setBrandId(product.getBrand().getId());
             dtoProducts.add(dtoProduct);
@@ -181,7 +178,7 @@ public class ProductManager implements IProductService {
         this.productRepository.deleteById(id);
     }
 
-    private Product findProductOrThrow(int id) {
+    public Product findProductOrThrow(int id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(id))));
     }

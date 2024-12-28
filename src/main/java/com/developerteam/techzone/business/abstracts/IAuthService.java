@@ -15,4 +15,6 @@ public interface IAuthService {
 
     Optional<User> getAuthenticatedUser();
 
+     String getUserType();
+
 }

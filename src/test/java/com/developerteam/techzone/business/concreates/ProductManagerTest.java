@@ -10,6 +10,7 @@ import com.developerteam.techzone.entities.dto.DtoBrand;
 import com.developerteam.techzone.entities.dto.DtoCategory;
 import com.developerteam.techzone.entities.dto.DtoProduct;
 import com.developerteam.techzone.entities.dto.DtoProductIU;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class ProductManagerTest {
 
+    @Autowired
     private ProductManager productManager;
 
     @Autowired
@@ -40,10 +42,6 @@ class ProductManagerTest {
     @Autowired
     private CategoryManager categoryManager;
 
-    @BeforeEach
-    void setUp() {
-        productManager = new ProductManager(productRepository);
-    }
 
     @Test
     void testGetById() {
@@ -207,5 +205,18 @@ class ProductManagerTest {
         Product product = productRepository.getById(3);
         assertNotNull(product);
         productRepository.delete(product);
+    }
+
+    @Test
+    void testFindProductOrThrow() {
+        Product result = productManager.findProductOrThrow(2);
+
+        assertNotNull(result);
+        assertEquals(2, result.getId(), "The category ID should match.");
+        assertEquals("Iphone 11 pro", result.getName());
+        assertEquals(25000, result.getPrice());
+        assertEquals(2, result.getStockAmount());
+        assertEquals(1, result.getBrand().getId());
+        assertEquals(2, result.getCategory().getId());
     }
 }

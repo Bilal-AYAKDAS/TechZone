@@ -1,6 +1,7 @@
 package com.developerteam.techzone.business.concreates;
 
 import com.developerteam.techzone.dataAccess.abstracts.ICategoryRepository;
+import com.developerteam.techzone.entities.concreates.Brand;
 import com.developerteam.techzone.entities.concreates.Category;
 import com.developerteam.techzone.entities.dto.DtoCategory;
 import com.developerteam.techzone.entities.dto.DtoCategoryIU;
@@ -21,19 +22,16 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Service
+@SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class CategoryManagerTest {
 
+    @Autowired
     private CategoryManager categoryManager;
 
     @Autowired
     private ICategoryRepository categoryRepository;
 
-    @BeforeEach
-    void setUp() {
-        categoryManager = new CategoryManager(categoryRepository);
-    }
 
     @Test
     void testGetAll() {
@@ -95,6 +93,15 @@ class CategoryManagerTest {
         Category category = categoryRepository.getById(3);
         assertNotNull(category);
         categoryRepository.delete(category);
+    }
+
+    @Test
+    void testFindCategoryOrThrow() {
+        Category result = categoryManager.findCategoryOrThrow(1);
+
+        assertNotNull(result);
+        assertEquals(1, result.getId(), "The category ID should match.");
+        assertEquals("Bilgisayar", result.getName());
     }
 }
 

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol</title>
+    <link rel="stylesheet" href="../../css/table.css" type="text/css" media="screen, projection"/>
+    <link rel="stylesheet" href="../../jquery.ui/jquery-ui.css" type="text/css" media="screen, projection"/>
+    <link rel="stylesheet" href="../../bootstrap/bootstrap.min.css" type="text/css" media="screen, projection"/>
+    <script type="text/javascript" src="../../jquery.ui/jquery-3.7.1.js"></script>
+    <script type="text/javascript" src="../../jquery.ui/jquery-ui.js"></script>
+    <style>
+        .divider:after,
+        .divider:before {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #eee;
+        }
+        .h-custom {
+            height: calc(100% - 73px);
+        }
+        @media (max-width: 450px) {
+            .h-custom {
+                height: 100%;
+            }
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function kayitOl() {
+            // Önceki hata mesajlarını temizle
+            $('.error-message').remove();
+
+            var firstName = $('#firstName').val();
+            var lastName = $('#lastName').val();
+            var age = $('#age').val();
+            var email = $('#email').val();
+            var phoneNumber = $('#phoneNumber').val();
+            var username = $('#username').val();
+            var password = $('#password').val();
+
+            $.ajax({
+                type: "POST",
+                url: '/register', // Backend register endpoint
+                data: JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                    age: age,
+                    email: email,
+                    phoneNumber: phoneNumber,
+                    username: username,
+                    password: password
+                }),
+                contentType: "application/json",
+                success: function (response) {
+                    alert("Kayıt başarılı!");
+                    window.location.href = 'login.html'; // Giriş sayfasına yönlendir
+                },
+                error: function (xhr) {
+                    // Hata mesajlarını backend'den al
+                    var errorMessages = xhr.responseJSON?.exception?.message;
+
+                    if (errorMessages) {
+                        // Her bir hata mesajını ilgili input'un altına ekle
+                        Object.keys(errorMessages).forEach(function (key) {
+                            errorMessages[key].forEach(function (message) {
+                                $('#' + key).after('<p class="error-message text-danger small">' + message + '</p>');
+                            });
+                        });
+                    } else {
+                        alert("Bilinmeyen bir hata oluştu.");
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<section class="vh-100">
+    <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="breadcrumb"><a href="/static">Home</a><span class="sep">></span>Register</div>
+            <div class="col-md-9 col-lg-6 col-xl-5">
+                <img src="../../img/logo.png" class="img-fluid" style="max-width: 30%;" alt="Sample image"> <b>TechZone</b>
+            </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <form>
+                    <!-- First Name input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="firstName">First Name</label>
+                        <input type="text" id="firstName" class="form-control form-control-lg" placeholder="First Name" required />
+
+                    </div>
+
+                    <!-- Last Name input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="lastName">Last Name</label>
+                        <input type="text" id="lastName" class="form-control form-control-lg" placeholder="Last Name" required />
+
+                    </div>
+
+                    <!-- Age input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="age">Age</label>
+                        <input type="number" id="age" class="form-control form-control-lg" placeholder="Age" required min="18" />
+
+                    </div>
+
+                    <!-- Email input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" id="email" class="form-control form-control-lg" placeholder="Email Address" required />
+
+                    </div>
+
+                    <!-- Phone Number input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="phoneNumber">Phone Number</label>
+                        <input type="text" id="phoneNumber" class="form-control form-control-lg" placeholder="Phone Number" required />
+
+                    </div>
+
+                    <!-- Username input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="username">Username</label>
+                        <input type="text" id="username" class="form-control form-control-lg" placeholder="Username" required />
+
+                    </div>
+
+                    <!-- Password input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" class="form-control form-control-lg" placeholder="Password" required />
+
+                    </div>
+
+                    <div class="text-center text-lg-start mt-4 pt-2">
+                        <button type="button" class="btn btn-primary btn-lg" onclick="kayitOl()">Register</button>
+                    </div>
+
+                    <div class="text-center">
+                        <p class="mt-3">Already have an account? <a href="login.html">Login here</a></p>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

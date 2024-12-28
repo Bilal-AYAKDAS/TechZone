@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ana Sayfa - Technology Store </title>
+  <link rel="shortcut icon" href="#">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link href="../../bootstrap/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome -->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+  <!-- CSS Dosyası -->
+  <link href="../../css/style.css" rel="stylesheet">
+
+
+
+
+  <!-- Bootstrap JS ve bağımlılıkları
+  <script src="./jquery.ui/jquery-3.7.1.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="./bootstrap/bootstrap.bundle.min.js"></script>
+  -->
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+  <!-- Popper.js -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+<script src = "../../js/source.js"></script>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+  <a class="navbar-brand" href="#">
+    <img src="../../img/logo.png" style="margin-top:-13px;margin-bottom: -11px; height: 60px;" alt="Logo">
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Ana Sayfa</a>
+      </li>
+      <li class="nav-item" id="navbar-login">
+        <!-- Giriş butonu veya profil linki buraya dinamik olarak eklenir -->
+      </li>
+      <li class="nav-item" id="logout-btn" style="display: none;">
+        <a href="#" class="btn btn-danger rounded-pill py-2 px-4" onclick="logout()">Çıkış Yap</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/public/about">Hakkımızda</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../customer/Contact">İletişim</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../customer/cart"><i class="fa-solid fa-cart-shopping"></i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../customer/favorites"><i class="fa-solid fa-heart"></i></a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+<div class="container">
+  <div class="row" id="categoryRow">
+    <!----kategoriler---->
+  </div>
+  <div class="row" id="row2">
+    <div class="col1" id="brandList"></div>
+    <div class="col2" id="productGrid"></div>
+  </div>
+
+</div>
+
+
+
+
+
+</body>
+</html>

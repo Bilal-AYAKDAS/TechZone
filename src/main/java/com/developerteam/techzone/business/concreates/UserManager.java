@@ -1,8 +1,14 @@
 package com.developerteam.techzone.business.concreates;
 
+import com.developerteam.techzone.business.abstracts.IAuthService;
 import com.developerteam.techzone.business.abstracts.IUserService;
 import com.developerteam.techzone.dataAccess.abstracts.IUserRepository;
 import com.developerteam.techzone.entities.concreates.User;
+import com.developerteam.techzone.entities.dto.DtoUser;
+import com.developerteam.techzone.exception.ErrorMessage;
+import com.developerteam.techzone.exception.MessageType;
+import com.developerteam.techzone.exception.UserNotFoundException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,26 +18,28 @@ import java.util.Optional;
 @Service
 public class UserManager implements IUserService {
 
-    private IUserRepository userRepository;
 
     @Autowired
-    public UserManager(IUserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private IUserRepository userRepository;
+
+
+    @Autowired
+    private IAuthService authService;
+
 
     @Override
     public List<User> getAll() {
-        return this.userRepository.findAll();
+        return userRepository.findAll();
     }
 
     @Override
     public User getById(int id) {
-        return this.userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
     public User getByEmail(String email) {
-        return this.userRepository.findByEmail(email).get();
+        return userRepository.findByEmail(email).get();
     }
 
     @Override
@@ -41,7 +49,7 @@ public class UserManager implements IUserService {
 
     @Override
     public User add(User user) {
-        return this.userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
@@ -61,6 +69,43 @@ public class UserManager implements IUserService {
 
     @Override
     public void delete(int id) {
-        this.userRepository.deleteById(id);
+        userRepository.deleteById(id);
     }
+
+    @Override
+    public DtoUser getOwnInfo() {
+        Optional<User> optionalUser = authService.getAuthenticatedUser();
+        if (optionalUser.isEmpty()){
+            throw new UserNotFoundException(
+                    new ErrorMessage(MessageType.USER_NOT_FOUND, "User does not exist.")
+            );
+        }
+        DtoUser dtoUser = new DtoUser();
+        BeanUtils.copyProperties(optionalUser.get(), dtoUser);
+        return dtoUser;
+    }
+
+    @Override
+    public DtoUser updateOwnInfo(DtoUser dtoUser) {
+        Optional<User> optionalUser =authService.getAuthenticatedUser();
+
+        if (optionalUser.isEmpty()){
+            throw new UserNotFoundException(
+                    new ErrorMessage(MessageType.USER_NOT_FOUND, "User does not exist.")
+            );
+        }
+        User user = optionalUser.get();
+        user.setFirstName(dtoUser.getFirstName());
+        user.setLastName(dtoUser.getLastName());
+        user.setPhoneNumber(dtoUser.getPhoneNumber());
+        user.setEmail(dtoUser.getEmail());
+        user.setAge(dtoUser.getAge());
+
+        User dbUser = this.userRepository.save(user);
+        DtoUser userResponse = new DtoUser();
+        BeanUtils.copyProperties(dbUser, userResponse);
+        return userResponse;
+    }
+
+
 }
