@@ -9,6 +9,7 @@ import com.developerteam.techzone.dataAccess.abstracts.IOrderRepository;
 import com.developerteam.techzone.entities.concreates.*;
 import com.developerteam.techzone.entities.dto.DtoOrder;
 import com.developerteam.techzone.entities.dto.DtoOrderIU;
+import com.developerteam.techzone.exception.BaseException;
 import com.developerteam.techzone.exception.ErrorMessage;
 import com.developerteam.techzone.exception.MessageType;
 import com.developerteam.techzone.exception.UserNotFoundException;
@@ -87,10 +88,12 @@ public class OrderManager implements IOrderService {
         int cartId = dtoOrderIU.getCartId();
         Optional<Cart> orderCart = cartRepository.findById(cartId);
         if (orderCart.isEmpty()){
-            return new DtoOrder();
+            new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(orderCart.get().getId())));
         }
-        if(orderCart.get().getUser().getId()==user.getId()){
-            return new DtoOrder();
+        if(orderCart.get().getUser().getId()!=user.getId()){
+            throw new UserNotFoundException(
+                    new ErrorMessage(MessageType.USER_NOT_FOUND, "Cart has not this user.")
+            );
         }
         // `Order` nesnesini oluştur
         Order order = new Order();
@@ -125,15 +128,13 @@ public class OrderManager implements IOrderService {
         dtoOrder.setId(order.getId());
         dtoOrder.setTotalPrice(totalPrice);
         dtoOrder.setStatus(order.getStatus());
+        dtoOrder.setCreatedDate(order.getCreatedDate());
+        dtoOrder.setModifiedDate(order.getModifiedDate());
+        dtoOrder.setOrderItems(orderItemRepository.findByOrder(order));
+
+        cartItemRepository.deleteByCartId(cartId);
+        cartRepository.deleteById(cartId);
         return dtoOrder;
-
-
-
-
-
-
-
-
     }
 
     @Override

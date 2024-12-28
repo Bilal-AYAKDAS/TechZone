@@ -13,7 +13,7 @@
     <script>
 
         const openEdit = (id) => {
-            window.location.href = `adminEditCategories.html/${id}`;
+            window.location.href = `../admin/adminCategoriesEdit?id=${id}`;
         }
 
         // HTML Kısmı (Bootstrap Table)
@@ -58,12 +58,12 @@
         };
 
         const deleteById = (id) => {
-            if (confirm("Bu öğeyi silmek istediğinizden emin misiniz?")) {
+            if (confirm("Are you sure delete the item?")) {
                 $.ajax({
-                    url: `./api/categories/delete/${id}`,
+                    url: `../api/categories/delete/${id}`,
                     method: "DELETE",
                     success: function () {
-                        alert("Öğe başarıyla silindi.");
+                        alert("succesfully deleted");
                         getAll(); // Tabloyu yenile
                     },
                     error: function (xhr, status, error) {
@@ -161,18 +161,27 @@
     </nav>
 
     <div class="content">
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Category Name</th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody id="categoryTblBody">
-            </tbody>
-        </table>
+        <div>
+            <form action="http://localhost:8080/admin/adminCategoriesEdit" method="get">
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success" value="New Categories">
+                </div>
+            </form>
+        </div>
+        <div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Category Name</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="categoryTblBody">
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </body>
