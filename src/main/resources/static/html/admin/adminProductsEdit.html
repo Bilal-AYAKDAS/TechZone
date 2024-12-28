@@ -40,9 +40,7 @@
                     $("#category").val(data.categoryId);
                     $("#brand").val(data.brandId);
                     $("#productDescription").val(data.description);
-                    $("#imagePreview").attr("src", "../"+data.imageUrl).css("display", "block");
-
-
+                    $("#imagePreview").attr("src", data.imageUrl).css("display", "block");
 
 
                 },
@@ -103,9 +101,32 @@
             });
         }
 
-        const updateCategory = () => {
+        const saveProduct = () => {
             const accessToken = localStorage.getItem('accessToken');
-            const category = $("#category").val();
+
+            // Form verilerini oku
+            const name = $("#productName").val();
+            const price = $("#productPrice").val();
+            const stockAmount = $("#productStock").val();
+            const description = $("#productDescription").val();
+            const categoryId = $("#category").val();
+            const brandId = $("#brand").val();
+            const productImage = $("#productImage")[0].files[0]; // Dosya seçimini al
+
+            // FormData nesnesi oluştur
+            const formData = new FormData();
+            const productData = {
+                name: name,
+                price: price,
+                stockAmount: stockAmount,
+                description: description,
+                categoryId: categoryId,
+                brandId: brandId
+            };
+
+            formData.append("product", new Blob([JSON.stringify(productData)], {type: "application/json"}));
+            formData.append("file", productImage);
+
 
             let url =`../api/products/update/${id}`;
             let method = "PUT";
@@ -118,12 +139,15 @@
                 $.ajax({
                     url: url,
                     method: method,
-                    data: JSON.stringify({name: name}),
                     headers: {'Authorization': `Bearer ${accessToken}`},
-                    contentType: "application/json",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     success: function (data) {
                         alert("Succesfully saved!");
-                        window.location.href =`http://localhost:8080/admin/adminCategoriesEdit?id=${data.id}`;
+                        console.log(data);
+                        //window.location.href =`http://localhost:8080/admin/adminProductsEdit?id=${data.id}`;
+
 
 
                     },
@@ -266,7 +290,7 @@
                 <textarea class="form-control" id="productDescription"  placeholder="Enter Product Description"></textarea>
             </div>
             <div class="form-group mt-2">
-                <input type="button" class="btn btn-primary" value="Save Changes" onclick="updateCategory()">
+                <input type="button" class="btn btn-primary" value="Save Changes" onclick="saveProduct()">
             </div>
         </form>
 

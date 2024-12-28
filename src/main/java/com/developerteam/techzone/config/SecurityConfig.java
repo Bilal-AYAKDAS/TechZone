@@ -43,6 +43,7 @@ public class SecurityConfig {
             "/html/public/**",
             "/public/**",
             "/",
+            "/uploads/**",
             ORDERS,
             USERS,
             AUTHENTICATE,

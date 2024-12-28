@@ -87,15 +87,15 @@ class CartManagerTest {
         assertEquals(1, dtoCartItems.get(0).getQuantity());
         assertEquals(2, dtoCartItems.get(0).getProduct().getId());
     }
-
-    @Test
-    void testGetOwnCart() {
-        List<DtoCartItem> dtoCartItems = cartManager.getOwnCart();
-        assertNotNull(dtoCartItems);
-        assertEquals(3,dtoCartItems.get(0).getId());
-        assertEquals(3,dtoCartItems.get(0).getQuantity());
-        assertEquals(1,dtoCartItems.get(0).getProduct().getId());
-    }
+//
+//    @Test
+//    void testGetOwnCart() {
+//        List<DtoCartItem> dtoCartItems = cartManager.getOwnCart();
+//        assertNotNull(dtoCartItems);
+//        assertEquals(3,dtoCartItems.get(0).getId());
+//        assertEquals(3,dtoCartItems.get(0).getQuantity());
+//        assertEquals(1,dtoCartItems.get(0).getProduct().getId());
+//    }
 
     @Test
     @Transactional

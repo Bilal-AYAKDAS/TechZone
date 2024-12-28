@@ -8,6 +8,7 @@ import com.developerteam.techzone.entities.dto.DtoProductIU;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -50,14 +51,19 @@ public class ProductsController {
     }
 
 
-    @PostMapping("/add")
-    public DtoProduct add (@RequestBody @Valid DtoProductIU dtoProductIU){
-        return this.productService.add(dtoProductIU);
+    @PostMapping(value = "/add", consumes = {"multipart/form-data"})
+    public DtoProduct add (@RequestPart("product") @Valid DtoProductIU dtoProductIU,
+                           @RequestParam("file") MultipartFile file){
+
+        return this.productService.add(dtoProductIU,file);
     }
 
-    @PutMapping("/update/{id}")
-    public DtoProduct update(@PathVariable int id,@RequestBody @Valid DtoProductIU dtoProductIU){
-        return this.productService.update(id,dtoProductIU);
+    @PutMapping(value = "/update/{id}", consumes = {"multipart/form-data"})
+    public DtoProduct update(@PathVariable int id,
+                             @RequestPart("product") @Valid DtoProductIU dtoProductIU,
+                             @RequestParam("file") MultipartFile file
+                             ){
+        return this.productService.update(id,dtoProductIU,file);
     }
 
     @DeleteMapping("/delete/{id}")
