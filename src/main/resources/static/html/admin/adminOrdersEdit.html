@@ -14,22 +14,22 @@
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
 
-        const getBrandById = () => {
+        const getCategoryById = () => {
             const accessToken = localStorage.getItem('accessToken');
             // API'den veri çekme işlemi
             if (id==null) {
-                $("brandName").val("");
+                $("categoryName").val("");
                 return;
             }
             $.ajax({
-                url: "../api/brands/"+id,
+                url: "../api/categories/"+id,
                 method: "GET",
                 dataType: "json",
                 headers: {'Authorization': `Bearer ${accessToken}`},
                 success: function (data) {
                     console.log(data);
                     console.log(data.name);
-                    $("#brandName").val(data.name);
+                    $("#categoryName").val(data.name);
                 },
                 error: function (xhr, status, error) {
                     console.error("API Hatası: ", error);
@@ -38,14 +38,14 @@
             });
         };
 
-        const updateBrand = () => {
+        const updateCategory = () => {
             const accessToken = localStorage.getItem('accessToken');
-            const name = $("#brandName").val();
+            const name = $("#categoryName").val();
 
-            let url =`../api/brands/update/${id}`;
+            let url =`../api/categories/update/${id}`;
             let method = "PUT";
             if (id==null) {
-                url = `../api/brands/add`;
+                url = `../api/categories/add`;
                 method = "POST";
             }
 
@@ -58,7 +58,7 @@
                     contentType: "application/json",
                     success: function (data) {
                         alert("Succesfully saved!");
-                        window.location.href =`http://localhost:8080/admin/adminBrandsEdit?id=${data.id}`;
+                        window.location.href =`http://localhost:8080/admin/adminCategoriesEdit?id=${data.id}`;
 
 
                     },
@@ -71,7 +71,7 @@
         };
 
         $(document).ready(function () {
-            getBrandById();
+            getCategoryById();
         });
 
 
@@ -155,11 +155,11 @@
     <div class="content">
         <form>
             <div class="form-group">
-                <label for="brandName">Brand Name</label>
-                <input type="text" class="form-control" id="brandName"  placeholder="Enter Brand Name">
+                <label for="categoryName">Category Name</label>
+                <input type="text" class="form-control" id="categoryName"  placeholder="Enter Brand Name">
             </div>
             <div class="form-group">
-                <input type="button" class="btn btn-primary" value="Save Changes" onclick="updateBrand()">
+                <input type="button" class="btn btn-primary" value="Save Changes" onclick="updateCategory()">
             </div>
         </form>
 

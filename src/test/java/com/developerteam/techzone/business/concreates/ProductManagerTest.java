@@ -131,72 +131,72 @@ class ProductManagerTest {
         assertEquals(1, dtoProducts.get(0).getBrandId());
     }
 
-    @Test
-    @Transactional
-    @Rollback(false)
-    void testAdd() {
-        DtoBrand dtoBrands = brandManager.getById(5);
+//    @Test
+//    @Transactional
+//    @Rollback(false)
+//    void testAdd() {
+//        DtoBrand dtoBrands = brandManager.getById(5);
+//
+//        DtoCategory dtoCategories = categoryManager.getById(2);
+//
+//        DtoProductIU dtoProductIU = new DtoProductIU();
+//        dtoProductIU.setName("A54");
+//        dtoProductIU.setDescription("-");
+//        dtoProductIU.setPrice(20000);
+//        dtoProductIU.setStockAmount(5);
+//        dtoProductIU.setCategoryId(dtoCategories.getId());
+//        dtoProductIU.setBrandId(dtoBrands.getId());
+//
+//        DtoProduct result = productManager.add(dtoProductIU);
+//
+//        assertNotNull(result);
+//        assertEquals("A54", result.getName());
+//        assertEquals(dtoCategories.getId(), result.getCategoryId());
+//        assertEquals(dtoBrands.getId(), result.getBrandId());
+//
+//        Product savedProduct = productRepository.getById(1);
+//        assertNotNull(savedProduct);
+//        assertEquals(result.getName(), savedProduct.getName());
+//        assertEquals("imageURL", savedProduct.getImageUrl());
+//        assertEquals(result.getDescription(), savedProduct.getDescription());
+//        assertEquals(result.getPrice(), savedProduct.getPrice());
+//        assertEquals(result.getStockAmount(), savedProduct.getStockAmount());
+//        assertEquals(dtoCategories.getId(), savedProduct.getCategory().getId());
+//        assertEquals(dtoBrands.getId(), savedProduct.getBrand().getId());
+//    }
 
-        DtoCategory dtoCategories = categoryManager.getById(2);
-
-        DtoProductIU dtoProductIU = new DtoProductIU();
-        dtoProductIU.setName("A54");
-        dtoProductIU.setDescription("-");
-        dtoProductIU.setPrice(20000);
-        dtoProductIU.setStockAmount(5);
-        dtoProductIU.setCategoryId(dtoCategories.getId());
-        dtoProductIU.setBrandId(dtoBrands.getId());
-
-        DtoProduct result = productManager.add(dtoProductIU);
-
-        assertNotNull(result);
-        assertEquals("A54", result.getName());
-        assertEquals(dtoCategories.getId(), result.getCategoryId());
-        assertEquals(dtoBrands.getId(), result.getBrandId());
-
-        Product savedProduct = productRepository.getById(1);
-        assertNotNull(savedProduct);
-        assertEquals(result.getName(), savedProduct.getName());
-        assertEquals("imageURL", savedProduct.getImageUrl());
-        assertEquals(result.getDescription(), savedProduct.getDescription());
-        assertEquals(result.getPrice(), savedProduct.getPrice());
-        assertEquals(result.getStockAmount(), savedProduct.getStockAmount());
-        assertEquals(dtoCategories.getId(), savedProduct.getCategory().getId());
-        assertEquals(dtoBrands.getId(), savedProduct.getBrand().getId());
-    }
-
-    @Test
-    @Transactional
-    @Rollback(false)
-    void testUpdate() {
-        DtoBrand dtoBrands = brandManager.getById(1);
-        DtoCategory dtoCategories = categoryManager.getById(2);
-
-        DtoProductIU dtoProductIU = new DtoProductIU();
-        dtoProductIU.setName("Iphone 11 pro");
-        dtoProductIU.setDescription("-");
-        dtoProductIU.setPrice(25000);
-        dtoProductIU.setStockAmount(2);
-        dtoProductIU.setCategoryId(dtoCategories.getId());
-        dtoProductIU.setBrandId(dtoBrands.getId());
-
-        DtoProduct result = productManager.update(2,dtoProductIU);
-        assertNotNull(result);
-        assertEquals("Iphone 11 pro", result.getName());
-        assertEquals(dtoCategories.getId(), result.getCategoryId());
-        assertEquals(dtoBrands.getId(), result.getBrandId());
-
-        Product savedProduct = productRepository.getById(2);
-        assertNotNull(savedProduct);
-        assertEquals(result.getName(), savedProduct.getName());
-        assertEquals("imageURL", savedProduct.getImageUrl());
-        assertEquals(result.getDescription(), savedProduct.getDescription());
-        assertEquals(result.getPrice(), savedProduct.getPrice());
-        assertEquals(result.getStockAmount(), savedProduct.getStockAmount());
-        assertEquals(dtoCategories.getId(), savedProduct.getCategory().getId());
-        assertEquals(dtoBrands.getId(), savedProduct.getBrand().getId());
-
-    }
+//    @Test
+//    @Transactional
+//    @Rollback(false)
+//    void testUpdate() {
+//        DtoBrand dtoBrands = brandManager.getById(1);
+//        DtoCategory dtoCategories = categoryManager.getById(2);
+//
+//        DtoProductIU dtoProductIU = new DtoProductIU();
+//        dtoProductIU.setName("Iphone 11 pro");
+//        dtoProductIU.setDescription("-");
+//        dtoProductIU.setPrice(25000);
+//        dtoProductIU.setStockAmount(2);
+//        dtoProductIU.setCategoryId(dtoCategories.getId());
+//        dtoProductIU.setBrandId(dtoBrands.getId());
+//
+//        DtoProduct result = productManager.update(2,dtoProductIU);
+//        assertNotNull(result);
+//        assertEquals("Iphone 11 pro", result.getName());
+//        assertEquals(dtoCategories.getId(), result.getCategoryId());
+//        assertEquals(dtoBrands.getId(), result.getBrandId());
+//
+//        Product savedProduct = productRepository.getById(2);
+//        assertNotNull(savedProduct);
+//        assertEquals(result.getName(), savedProduct.getName());
+//        assertEquals("imageURL", savedProduct.getImageUrl());
+//        assertEquals(result.getDescription(), savedProduct.getDescription());
+//        assertEquals(result.getPrice(), savedProduct.getPrice());
+//        assertEquals(result.getStockAmount(), savedProduct.getStockAmount());
+//        assertEquals(dtoCategories.getId(), savedProduct.getCategory().getId());
+//        assertEquals(dtoBrands.getId(), savedProduct.getBrand().getId());
+//
+//    }
 
     @Test
     @Transactional

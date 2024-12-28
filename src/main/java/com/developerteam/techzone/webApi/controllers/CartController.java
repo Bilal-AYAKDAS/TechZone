@@ -3,6 +3,7 @@ package com.developerteam.techzone.webApi.controllers;
 import com.developerteam.techzone.business.abstracts.ICartService;
 import com.developerteam.techzone.entities.concreates.Cart;
 import com.developerteam.techzone.entities.concreates.CartItem;
+import com.developerteam.techzone.entities.dto.DtoCart;
 import com.developerteam.techzone.entities.dto.DtoCartItem;
 import com.developerteam.techzone.entities.dto.DtoCartItemIU;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class CartController {
 
     //For Customer
     @GetMapping("/getOwnCart")
-    public List<DtoCartItem> getOwnCart(){
+    public DtoCart getOwnCart(){
         return this.cartService.getOwnCart();
     }
 
