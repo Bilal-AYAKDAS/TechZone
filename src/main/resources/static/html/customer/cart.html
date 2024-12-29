@@ -66,6 +66,9 @@
 
     </style>
     <script>
+
+        let cartId = null;
+
         $(document).ready(function () {
             const userId = localStorage.getItem('accessToken');
             // Sepet verilerini getOwnCart API'sinden çek
@@ -75,7 +78,9 @@
                 headers: {
                     'Authorization': `Bearer ${userId}` // Token'ı Authorization başlığına ekle
                 },
-                success: function (cartItems) {
+                success: function (cart) {
+                    cartId = cart.id;
+                    let cartItems = cart.cartItems;
                     const cartTableBody = $('#cartTableBody'); // Tablo gövdesi
                     let totalPrice = 0; // Toplam fiyat
                     let count = 1; // Satır numarası
@@ -125,12 +130,7 @@
                 const userId = localStorage.getItem('accessToken'); // Token al
                 const totalPrice = $('#totalPrice').text().replace('Toplam: ', '').replace(' TL', '');
 
-                const orderData = {
-                    totalPrice: totalPrice,
-                    status: 'Pending', // Durum bilgisi
-                    createdDate: new Date(),
-                    orderItems: [] // Sepet ürünleri buraya eklenecek
-                };
+
 
                 // CreateOrder API çağrısı
                 $.ajax({
@@ -140,7 +140,7 @@
                         'Authorization': `Bearer ${userId}`
                     },
                     contentType: 'application/json',
-                    data: JSON.stringify(orderData),
+                    data: JSON.stringify({ cartId:cartId }),
                     success: function (response) {
                         alert('Sipariş başarıyla oluşturuldu!');
                         $('#paymentModal').modal('hide'); // Modal'ı kapat

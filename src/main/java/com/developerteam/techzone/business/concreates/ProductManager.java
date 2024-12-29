@@ -78,6 +78,7 @@ public class ProductManager implements IProductService {
             dtoProduct.setName(product.getName());
             dtoProduct.setPrice(product.getPrice());
             dtoProduct.setStockAmount(product.getStockAmount());
+            dtoProduct.setImageUrl(product.getImageUrl());
             dtoProduct.setDescription(product.getDescription());
             dtoProduct.setCategoryId(product.getCategory().getId());
             dtoProduct.setBrandId(product.getBrand().getId());
@@ -96,6 +97,7 @@ public class ProductManager implements IProductService {
             dtoProduct.setName(product.getName());
             dtoProduct.setPrice(product.getPrice());
             dtoProduct.setStockAmount(product.getStockAmount());
+            dtoProduct.setImageUrl(product.getImageUrl());
             dtoProduct.setDescription(product.getDescription());
             dtoProduct.setCategoryId(product.getCategory().getId());
             dtoProduct.setBrandId(product.getBrand().getId());
@@ -115,6 +117,7 @@ public class ProductManager implements IProductService {
             dtoProduct.setPrice(product.getPrice());
             dtoProduct.setStockAmount(product.getStockAmount());
             dtoProduct.setDescription(product.getDescription());
+            dtoProduct.setImageUrl(product.getImageUrl());
             dtoProduct.setCategoryId(product.getCategory().getId());
             dtoProduct.setBrandId(product.getBrand().getId());
             dtoProducts.add(dtoProduct);
@@ -131,6 +134,7 @@ public class ProductManager implements IProductService {
             dtoProduct.setId(product.getId());
             dtoProduct.setName(product.getName());
             dtoProduct.setPrice(product.getPrice());
+            dtoProduct.setImageUrl(product.getImageUrl());
             dtoProduct.setStockAmount(product.getStockAmount());
             dtoProduct.setDescription(product.getDescription());
             dtoProduct.setCategoryId(product.getCategory().getId());
