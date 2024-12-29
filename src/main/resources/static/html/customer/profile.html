@@ -73,11 +73,22 @@
             padding: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+        #editProfileModal{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 9999;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
     </style>
     <script>
         $(document).ready(function () {
-            const userId = 6; // Örnek olarak kullanıcı ID'si sabit 6
+
             const accessToken = localStorage.getItem('accessToken');
 
             // Kullanıcı bilgilerini çekmek için AJAX çağrısı
@@ -106,7 +117,7 @@
 
             $("#editProfileBtn").on("click", function () {
 
-                // Modal'ı göster
+                // Edit profile Modal'ı göster
                 $("#editProfileModal").show();
                 // Kullanıcı bilgilerini al ve modal içeriğini doldur
                 $.ajax({
@@ -256,6 +267,35 @@
             });
 
 
+            // Geçmiş siparişleri çekmek için AJAX çağrısı
+            $.ajax({
+                url: `http://localhost:8080/api/orders/getall`, // Siparişleri çekeceğiniz API endpoint
+                type: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                success: function (orders) {
+                    let orderTableBody = '';
+                    orders.forEach((order, index) => {
+                        orderTableBody += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${order.id}</td>
+                    <td>${order.totalPrice}</td>
+                    <td>${order.status} ₺</td>
+                    <td>${order.createdDate}</td>
+
+                </tr>
+            `;
+                    });
+                    $('#orderTableBody').html(orderTableBody);
+                },
+                error: function () {
+                    alert('Siparişler alınırken bir hata oluştu.');
+                }
+            });
+
+
 
 
 
@@ -263,10 +303,7 @@
 
         });
 
-        // Bilgileri düzenle
-        function editProfile() {
-            alert('Bilgileri düzenleme özelliği henüz eklenmedi.');
-        }
+
 
 
 
@@ -339,14 +376,7 @@
                     <label for="phone">Telefon</label>
                     <input type="text" class="form-control" id="phone" disabled>
                 </div>
-                <div class="form-group">
-                    <label for="username">Kullanıcı Adı</label>
-                    <input type="text" class="form-control" id="username" disabled>
-                </div>
-                <div class="form-group">
-                    <label for="password">Şifre</label>
-                    <input type="password" class="form-control" id="password" disabled>
-                </div>
+
                 <div class="form-group">
                     <label for="age">Yaş</label>
                     <input type="number" class="form-control" id="age" disabled>
@@ -361,7 +391,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Edit Profile Modal -->
 <div id="editProfileModal" style="display: none;">
     <div class="modal-content">
         <h3>Profil Bilgilerini Düzenle</h3>
@@ -436,6 +466,25 @@
             <button type="button" id="closeAdrsModalBtn">İptal</button>
         </form>
     </div>
+</div>
+
+<div class="container mt-5">
+    <h2>Geçmiş Siparişlerim</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Sipariş No</th>
+            <th>Toplam Fiyat</th>
+            <th>Durum</th>
+            <th>Sipariş Tarihi</th>
+            <th>Ürün</th>
+        </tr>
+        </thead>
+        <tbody id="orderTableBody">
+        <!-- Siparişler dinamik olarak buraya eklenecek -->
+        </tbody>
+    </table>
 </div>
 
 
