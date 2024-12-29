@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -130,5 +131,18 @@ class AuthManagerTest {
         assertEquals(15, result.get().getId());
 
 
+    }
+
+    @Test
+    void testGetUserType() {
+        UserDetails  userDetails =org.springframework.security.core.userdetails.User.
+                withUsername("alidemir@gmail.com")
+                .password("alidemir")
+                .roles("CUSTOMER")
+                .build();
+
+        String token = jwtService.generateToken(userDetails);
+
+        assertNotNull(token);
     }
 }

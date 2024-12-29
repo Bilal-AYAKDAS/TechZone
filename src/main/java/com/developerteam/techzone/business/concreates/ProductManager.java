@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -225,7 +226,13 @@ public class ProductManager implements IProductService {
 
     @Override
     public void delete(int id) {
-        findProductOrThrow(id);
+        Product deletedProduct = findProductOrThrow(id);
+        File file = new File(deletedProduct.getImageUrl());
+        if (file.exists()) {
+            file.delete(); // Dosya silinir ve başarı durumunu döner
+        } else {
+            System.out.println("Dosya bulunamadı: " + deletedProduct.getImageUrl());
+        }
         this.productRepository.deleteById(id);
     }
 

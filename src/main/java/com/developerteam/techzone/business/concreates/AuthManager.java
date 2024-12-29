@@ -59,7 +59,7 @@ public class AuthManager implements IAuthService {
         User user = new User();
         user.setFirstName(newUser.getFirstName());
         user.setLastName(newUser.getLastName());
-        user.setId(newUser.getAge());
+        user.setAge(newUser.getAge());
         user.setEmail(newUser.getEmail());
         user.setPhoneNumber(newUser.getPhoneNumber());
         user.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
