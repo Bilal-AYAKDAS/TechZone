@@ -10,6 +10,7 @@ import com.developerteam.techzone.entities.concreates.*;
 import com.developerteam.techzone.entities.dto.DtoOrder;
 import com.developerteam.techzone.entities.dto.DtoOrderIU;
 import com.developerteam.techzone.entities.dto.DtoOrderItem;
+import com.developerteam.techzone.entities.dto.DtoProduct;
 import com.developerteam.techzone.exception.BaseException;
 import com.developerteam.techzone.exception.ErrorMessage;
 import com.developerteam.techzone.exception.MessageType;
@@ -65,6 +66,12 @@ public class OrderManager implements IOrderService {
             for (OrderItem orderItem : orderItems){
                 DtoOrderItem dtoOrderItem = new DtoOrderItem();
                 BeanUtils.copyProperties(orderItem,dtoOrderItem);
+                Product product = orderItem.getProduct();
+                DtoProduct dtoProduct = new DtoProduct();
+                BeanUtils.copyProperties(product,dtoProduct);
+                dtoProduct.setCategoryId(product.getCategory().getId());
+                dtoProduct.setBrandId(product.getBrand().getId());
+                dtoOrderItem.setProduct(dtoProduct);
                 dtoOrderItems.add(dtoOrderItem);
             }
             dtoOrder.setOrderItems(dtoOrderItems);
@@ -164,6 +171,12 @@ public class OrderManager implements IOrderService {
             for (OrderItem orderItem : orderItems){
                 DtoOrderItem dtoOrderItem = new DtoOrderItem();
                 BeanUtils.copyProperties(orderItem,dtoOrderItem);
+                Product product = orderItem.getProduct();
+                DtoProduct dtoProduct = new DtoProduct();
+                BeanUtils.copyProperties(product,dtoProduct);
+                dtoProduct.setCategoryId(product.getCategory().getId());
+                dtoProduct.setBrandId(product.getBrand().getId());
+                dtoOrderItem.setProduct(dtoProduct);
                 dtoOrderItems.add(dtoOrderItem);
             }
             dtoOrder.setOrderItems(dtoOrderItems);

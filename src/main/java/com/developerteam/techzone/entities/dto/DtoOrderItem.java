@@ -19,7 +19,7 @@ import java.util.List;
 public class DtoOrderItem {
 
     private int id;
-    private Product product;
+    private DtoProduct product;
     private int quantity;
     private Double price;
 
