@@ -59,6 +59,8 @@ public class OrderManager implements IOrderService {
         for (Order order : orders){
             DtoOrder dtoOrder = new DtoOrder();
             BeanUtils.copyProperties(order,dtoOrder);
+            List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
+            dtoOrder.setOrderItems(orderItems);
             dtoOrders.add(dtoOrder);
         }
         return dtoOrders;
