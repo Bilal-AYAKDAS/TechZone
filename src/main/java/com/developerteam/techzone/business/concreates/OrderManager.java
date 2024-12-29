@@ -9,6 +9,7 @@ import com.developerteam.techzone.dataAccess.abstracts.IOrderRepository;
 import com.developerteam.techzone.entities.concreates.*;
 import com.developerteam.techzone.entities.dto.DtoOrder;
 import com.developerteam.techzone.entities.dto.DtoOrderIU;
+import com.developerteam.techzone.entities.dto.DtoOrderItem;
 import com.developerteam.techzone.exception.BaseException;
 import com.developerteam.techzone.exception.ErrorMessage;
 import com.developerteam.techzone.exception.MessageType;
@@ -60,7 +61,13 @@ public class OrderManager implements IOrderService {
             DtoOrder dtoOrder = new DtoOrder();
             BeanUtils.copyProperties(order,dtoOrder);
             List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
-            dtoOrder.setOrderItems(orderItems);
+            List<DtoOrderItem> dtoOrderItems = new ArrayList<>();
+            for (OrderItem orderItem : orderItems){
+                DtoOrderItem dtoOrderItem = new DtoOrderItem();
+                BeanUtils.copyProperties(orderItem,dtoOrderItem);
+                dtoOrderItems.add(dtoOrderItem);
+            }
+            dtoOrder.setOrderItems(dtoOrderItems);
             dtoOrders.add(dtoOrder);
         }
         return dtoOrders;
@@ -132,8 +139,14 @@ public class OrderManager implements IOrderService {
         dtoOrder.setStatus(order.getStatus());
         dtoOrder.setCreatedDate(order.getCreatedDate());
         dtoOrder.setModifiedDate(order.getModifiedDate());
-        dtoOrder.setOrderItems(orderItemRepository.findByOrder(order));
-
+        List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
+        List<DtoOrderItem> dtoOrderItems = new ArrayList<>();
+        for (OrderItem orderItem : orderItems){
+            DtoOrderItem dtoOrderItem = new DtoOrderItem();
+            BeanUtils.copyProperties(orderItem,dtoOrderItem);
+            dtoOrderItems.add(dtoOrderItem);
+        }
+        dtoOrder.setOrderItems(dtoOrderItems);
         cartItemRepository.deleteByCartId(cartId);
         cartRepository.deleteById(cartId);
         return dtoOrder;
@@ -146,6 +159,14 @@ public class OrderManager implements IOrderService {
         for (Order order : orderList){
             DtoOrder dtoOrder = new DtoOrder();
             BeanUtils.copyProperties(order,dtoOrder);
+            List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
+            List<DtoOrderItem> dtoOrderItems = new ArrayList<>();
+            for (OrderItem orderItem : orderItems){
+                DtoOrderItem dtoOrderItem = new DtoOrderItem();
+                BeanUtils.copyProperties(orderItem,dtoOrderItem);
+                dtoOrderItems.add(dtoOrderItem);
+            }
+            dtoOrder.setOrderItems(dtoOrderItems);
             dtoOrders.add(dtoOrder);
         }
         return dtoOrders;

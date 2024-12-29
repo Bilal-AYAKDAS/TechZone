@@ -16,6 +16,10 @@
             window.location.href = `adminEditOrder.html/${id}`;
         }
 
+        const dateFormatFnc = (date1) => {
+            let date = new Date(date1);
+            return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}   ${date.getHours()}:${date.getMinutes()}`;
+        }
         // HTML Kısmı (Bootstrap Table)
         // Aşağıdaki script, jQuery ile bir Bootstrap tablosu oluşturur ve API'den gelen verileri doldurur.
         const getAll = () => {
@@ -29,12 +33,17 @@
                     let tableHtml;
                     // API'den gelen verilerle tabloyu doldurma
                     data.forEach((order, index) => {
+
+                        order.orderItems.forEach((orderItem,index) => {
+
+                        }
+
                         tableHtml += `<tr>
                     <td>${index + 1}</td>
-                    <td>${order.totalPrice}</td>
+                    <td>${order.totalPrice.toFixed(2)}</td>
                     <td>${order.status}</td>
-                    <td>${order.createdDate}</td>
-                    <td>${order.modifiedDate}</td>
+                    <td>${dateFormatFnc(order.createdDate)}</td>
+                    <td>${dateFormatFnc(order.modifiedDate)}</td>
                     <td>
                         <button class="btn btn-primary edit-btn" onclick=openEdit(${order.id})>
                             <i class="fas fa-pencil-alt"></i>
@@ -167,7 +176,7 @@
             <thead>
             <tr>
                 <th>#</th>
-                <th>Product Name</th>
+                <th>Order Price</th>
                 <th>Product Price</th>
                 <th>Product Stock</th>
                 <th>Product Description</th>

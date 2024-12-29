@@ -1,7 +1,9 @@
 package com.developerteam.techzone.entities.dto;
 
+import com.developerteam.techzone.entities.concreates.Order;
 import com.developerteam.techzone.entities.concreates.OrderItem;
-
+import com.developerteam.techzone.entities.concreates.Product;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,12 +16,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DtoOrder {
+public class DtoOrderItem {
 
     private int id;
-    private Double totalPrice;
-    private String status;
-    private Date createdDate;
-    private Date modifiedDate;
-    private List<DtoOrderItem> orderItems;
+    private Product product;
+    private int quantity;
+    private Double price;
+
 }

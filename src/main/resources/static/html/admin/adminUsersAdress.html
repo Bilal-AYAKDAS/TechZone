@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ana Sayfa</title>
+    <title>Users Adress</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <!-- Bootstrap JS ve bağımlılıkları -->
@@ -43,16 +43,6 @@
                     <td>${userAdress.district}</td>
                     <td>${userAdress.postCode}</td>
                     <td>${userAdress.adress}</td>
-                    <td>
-                        <button class="btn btn-primary" onclick=openAdresList(${userAdress.id})>
-                            <i class="fa fa-list-alt"></i>
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger delete-btn" onclick=deleteById(${userAdress.id})>
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </td>
                 </tr>`;
                     });
 
@@ -67,22 +57,7 @@
             });
         };
 
-        const deleteById = (id) => {
-            if (confirm("Bu öğeyi silmek istediğinizden emin misiniz?")) {
-                $.ajax({
-                    url: `./api/categories/delete/${id}`,
-                    method: "DELETE",
-                    success: function () {
-                        alert("Öğe başarıyla silindi.");
-                        getAll(); // Tabloyu yenile
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Silme Hatası: ", error);
-                        alert("Silme işlemi başarısız oldu.");
-                    }
-                });
-            }
-        };
+
 
         $(document).ready(function () {
             getAll();
@@ -182,8 +157,6 @@
                 <th>District</th>
                 <th>Post Code</th>
                 <th>Adress</th>
-                <th></th>
-                <th></th>
             </tr>
             </thead>
             <tbody id="usersTblBody">
