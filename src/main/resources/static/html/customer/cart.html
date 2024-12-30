@@ -32,6 +32,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Popper.js (Bootstrap için gerekli) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="../js/general.js"></script>
 
 
     <style>
@@ -46,9 +47,7 @@
             margin-bottom: 20px;
         }
 
-        .navbar-dark .navbar-nav .nav-link {
-            color: #fff; /* Link rengini beyaz yapar */
-        }
+
         .navbar-dark .navbar-nav .nav-link:hover {
             background-color: #495057; /* Üzerine gelince arka plan rengini değiştirir */
         }
@@ -70,7 +69,9 @@
         let cartId = null;
 
         $(document).ready(function () {
+            controlAccessToken();
             const userId = localStorage.getItem('accessToken');
+
             // Sepet verilerini getOwnCart API'sinden çek
             $.ajax({
                 url: 'http://localhost:8080/api/cart/getOwnCart', // API endpoint
@@ -144,6 +145,7 @@
                     success: function (response) {
                         alert('Sipariş başarıyla oluşturuldu!');
                         $('#paymentModal').modal('hide'); // Modal'ı kapat
+                        window.location.reload();
                     },
                     error: function () {
                         alert('Sipariş oluşturulurken bir hata oluştu.');
@@ -191,29 +193,29 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="../public/index">Ana Sayfa</a>
+            <li class="nav-item ">
+                <a class="nav-link" href="/">Ana Sayfa</a>
             </li>
             <li class="nav-item" id="navbar-login">
                 <!-- Giriş butonu veya profil linki buraya dinamik olarak eklenir -->
             </li>
             <li class="nav-item" id="logout-btn" style="display: none;">
-                <a href="#" class="btn btn-danger rounded-pill py-2 px-4" onclick="logout()">Çıkış Yap</a>
+                <a href="#" class="nav-link" onclick="logout()">Çıkış Yap</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../public/about">Hakkımızda</a>
+                <a class="nav-link" href="/public/about">Hakkımızda</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="Contact">İletişim</a>
+                <a class="nav-link" href="../customer/Contact">İletişim</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="cart"><i class="fa-solid fa-cart-shopping"></i></a>
+                <a class="nav-link active" href="../customer/cart"><i class="fa-solid fa-cart-shopping"></i></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="favorites"><i class="fa-solid fa-heart"></i></a>
+                <a class="nav-link" href="../customer/favorites"><i class="fa-solid fa-heart"></i></a>
             </li>
         </ul>
     </div>
