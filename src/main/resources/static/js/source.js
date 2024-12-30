@@ -5,11 +5,11 @@ $(document).ready(function () {
 
     if (accessToken) {
         // Kullanıcı giriş yapmışsa
-        $('#navbar-login').html('<a href="../customer/profile" class="btn btn-success rounded-pill py-2 px-4">Profilim</a>');
+        $('#navbar-login').html('<a href="../customer/profile" class="nav-link">Profilim</a>');
         $('#logout-btn').show(); // Çıkış butonunu göster
     } else {
         // Kullanıcı giriş yapmamışsa
-        $('#navbar-login').html('<a href="../public/login" class="btn btn-primary rounded-pill py-2 px-4">Giriş Yap</a>');
+        $('#navbar-login').html('<a href="../public/login" class="nav-link">Giriş Yap</a>');
         $('#logout-btn').hide(); // Çıkış butonunu gizle
     }
 

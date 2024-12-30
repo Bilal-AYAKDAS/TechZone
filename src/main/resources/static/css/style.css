@@ -42,8 +42,9 @@ body {
     justify-content: space-evenly;
 }
 #productGrid{
-    display: flex;
+
     justify-content: space-around;
+    display: contents;
 }
 
 .container{
