@@ -126,7 +126,15 @@ public class CartManager implements ICartService {
         if (!(cartItemRepository.findById(cartItemId).get().getCart().getUser().getId() == optionalUser.get().getId())){
             new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(optionalCart.get().getId())));
         }
-        cartItemRepository.deleteById(cartItemId);
+         Optional<CartItem> optionalCartItem = cartItemRepository.findById(cartItemId);
+            CartItem cartItem = optionalCartItem.get();
+            if (cartItem.getQuantity() > 1){
+                cartItem.setQuantity(cartItem.getQuantity() - 1);
+                cartItemRepository.save(cartItem);
+            }else {
+                cartItemRepository.deleteById(cartItemId);
+            }
+
     }
 
     @Override
