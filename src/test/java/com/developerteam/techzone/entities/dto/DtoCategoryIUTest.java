@@ -10,11 +10,11 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DtoCategoryTest {
+class DtoCategoryIUTest {
 
     private final Validator validator;
 
-    public DtoCategoryTest() {
+    public DtoCategoryIUTest() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         this.validator = factory.getValidator();
     }

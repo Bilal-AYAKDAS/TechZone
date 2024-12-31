@@ -11,25 +11,25 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
 
-        // HTML Kısmı (Bootstrap Table)
-        // Aşağıdaki script, jQuery ile bir Bootstrap tablosu oluşturur ve API'den gelen verileri doldurur.
         const getBrandById = () => {
             const accessToken = localStorage.getItem('accessToken');
             // API'den veri çekme işlemi
+            if (id==null) {
+                $("brandName").val("");
+                return;
+            }
             $.ajax({
-                url: "./api/brands/"+id, // API endpoint URL
+                url: "../api/brands/"+id,
                 method: "GET",
                 dataType: "json",
                 headers: {'Authorization': `Bearer ${accessToken}`},
                 success: function (data) {
-
-                    // Oluşturulan tabloyu div'e ekleme
-                    $("#brandTblBody").html(tableHtml);
-
+                    console.log(data);
+                    console.log(data.name);
+                    $("#brandName").val(data.name);
                 },
                 error: function (xhr, status, error) {
                     console.error("API Hatası: ", error);
@@ -38,23 +38,33 @@
             });
         };
 
-        const updateBrands = (id) => {
+        const updateBrand = () => {
             const accessToken = localStorage.getItem('accessToken');
+            const name = $("#brandName").val();
+
+            let url =`../api/brands/update/${id}`;
+            let method = "PUT";
+            if (id==null) {
+                url = `../api/brands/add`;
+                method = "POST";
+            }
 
             if (confirm("Are you sure you want to save?")) {
                 $.ajax({
-                    url: `/api/brands/update/${id}`,
-                    method: "PUT",
-                    data: JSON.stringify({"name": name}),
+                    url: url,
+                    method: method,
+                    data: JSON.stringify({name: name}),
                     headers: {'Authorization': `Bearer ${accessToken}`},
-                    dataType: "json",
-                    success: function () {
-                        alert("Öğe başarıyla silindi.");
-                        getBrandById(); // Tabloyu yenile
+                    contentType: "application/json",
+                    success: function (data) {
+                        alert("Succesfully saved!");
+                        window.location.href =`http://localhost:8080/admin/adminBrandsEdit?id=${data.id}`;
+
+
                     },
                     error: function (xhr, status, error) {
                         console.error("Güncelleme Hatası: ", error);
-                        alert("Güncelleme işlemi başarısız oldu.");
+                        alert("Saving is failed.");
                     }
                 });
             }
@@ -125,26 +135,34 @@
         <h4 class="text-white">Menu</h4>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="http://localhost:8080/adminPages/adminBrands">Brands</a>
+                <a class="nav-link active" href="http://localhost:8080/admin/adminBrands">Brands</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://localhost:8080/adminPages/adminCategories">Categories</a>
+                <a class="nav-link" href="http://localhost:8080/admin/adminCategories">Categories</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://localhost:8080/adminPages/adminProducts">Products</a>
+                <a class="nav-link" href="http://localhost:8080/admin/adminProducts">Products</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://localhost:8080/adminPages/adminUsers">Users</a>
+                <a class="nav-link" href="http://localhost:8080/admin/adminUsers">Users</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://localhost:8080/adminPages/adminOrders">Orders</a>
+                <a class="nav-link" href="http://localhost:8080/admin/adminOrders">Orders</a>
             </li>
         </ul>
     </nav>
 
     <div class="content">
+        <form>
+            <div class="form-group">
+                <label for="brandName">Brand Name</label>
+                <input type="text" class="form-control" id="brandName"  placeholder="Enter Brand Name">
+            </div>
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" value="Save Changes" onclick="updateBrand()">
+            </div>
+        </form>
 
-        </table>
     </div>
 
 </body>

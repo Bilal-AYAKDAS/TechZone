@@ -1,4 +1,4 @@
-package com.developerteam.techzone.business.concreates;
+/* package com.developerteam.techzone.business.concreates;
 
 import com.developerteam.techzone.dataAccess.abstracts.IBrandRepository;
 import com.developerteam.techzone.entities.concreates.Brand;
@@ -7,7 +7,7 @@ import com.developerteam.techzone.entities.dto.DtoBrandIU;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigurpackage com.developerteam.techzone.business.concreates;
+
 
 import com.developerteam.techzone.dataAccess.abstracts.IBrandRepository;
 import com.developerteam.techzone.entities.concreates.Brand;
@@ -115,24 +115,11 @@ class BrandManagerTest {
         assertEquals("Apple", result.getName());
 
     }
-
-}e.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.stereotype.Service;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+    
 
 
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@SpringBootTest
-class BrandManagerTest {
 
+<<<<<<< HEAD
     @Autowired
     private IBrandRepository brandRepository; // Gerçek repository
 
@@ -208,5 +195,8 @@ class BrandManagerTest {
 //    void testFindBrandOrThrow() {
 //        Brand result = brandManager.findBrandOrThrow()
 //    }
-  
+
+=======
+>>>>>>> 36d262618e02bc5799565c1c29c4158d8b1172c6
 }
+*/

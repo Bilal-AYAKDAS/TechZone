@@ -108,7 +108,7 @@ public class UserAdressManager  implements IUserAdressService {
             );
         }
 
-        UserAdress userAdress = new UserAdress();
+        UserAdress userAdress = existingUserAdress.get();
         BeanUtils.copyProperties(dtoUserAdressIU, userAdress);
         userAdress.setUser(optionalUser.get());
         UserAdress userAdressSaved = userAdressRepository.save(userAdress);

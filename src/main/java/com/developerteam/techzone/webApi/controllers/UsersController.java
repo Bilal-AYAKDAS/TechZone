@@ -3,6 +3,7 @@ package com.developerteam.techzone.webApi.controllers;
 import com.developerteam.techzone.business.abstracts.IUserService;
 import com.developerteam.techzone.entities.concreates.User;
 import com.developerteam.techzone.entities.dto.DtoUser;
+import com.developerteam.techzone.entities.dto.DtoUserForAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class UsersController {
     }
 
     @GetMapping("/getall")
-    public List<User> getAll(){
+    public List<DtoUserForAdmin> getAll(){
         return this.userService.getAll();
     }
 

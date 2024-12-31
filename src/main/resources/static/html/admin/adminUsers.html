@@ -13,8 +13,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
 
-        const openEdit = (id) => {
-            window.location.href = `adminEditProducts.html/${id}`;
+        const openAdresList = (id) => {
+            window.location.href = `../admin/adminUsersAdress?id=${id}`;
         }
 
         // HTML Kısmı (Bootstrap Table)
@@ -38,8 +38,8 @@
                     <td>${user.email}</td>
                     <td>${user.phoneNumber}</td>
                     <td>
-                        <button class="btn btn-primary edit-btn" onclick=openEdit(${user.id})>
-                            <i class="fas fa-pencil-alt"></i>
+                        <button class="btn btn-primary" onclick=openAdresList(${user.id})>
+                            <i class="fa fa-list-alt"></i>
                         </button>
                     </td>
                     <td>
@@ -62,9 +62,10 @@
         };
 
         const deleteById = (id) => {
+            console.log(id)
             if (confirm("Bu öğeyi silmek istediğinizden emin misiniz?")) {
                 $.ajax({
-                    url: `./api/categories/delete/${id}`,
+                    url: `../api/users/delete/${id}`,
                     method: "DELETE",
                     success: function () {
                         alert("Öğe başarıyla silindi.");
@@ -174,7 +175,7 @@
                 <th>Age</th>
                 <th>Email</th>
                 <th>Phone Number</th>
-                <th></th>
+                <th>Adress</th>
                 <th></th>
             </tr>
             </thead>

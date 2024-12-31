@@ -7,13 +7,20 @@ import com.developerteam.techzone.entities.concreates.Category;
 import com.developerteam.techzone.entities.concreates.Product;
 import com.developerteam.techzone.entities.dto.DtoProduct;
 import com.developerteam.techzone.entities.dto.DtoProductIU;
+import com.developerteam.techzone.entities.dto.FileStorageProperties;
 import com.developerteam.techzone.exception.BaseException;
 import com.developerteam.techzone.exception.ErrorMessage;
 import com.developerteam.techzone.exception.MessageType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +31,9 @@ public class ProductManager implements IProductService {
     @Autowired
     private IProductRepository productRepository;
 
+    @Autowired
+    private FileStorageProperties fileStorageProperties;
+
     @Override
     public DtoProduct getById(int id) {
         Product product = findProductOrThrow(id);
@@ -32,6 +42,7 @@ public class ProductManager implements IProductService {
         dtoProduct.setName(product.getName());
         dtoProduct.setPrice(product.getPrice());
         dtoProduct.setStockAmount(product.getStockAmount());
+        dtoProduct.setImageUrl(product.getImageUrl());
         dtoProduct.setDescription(product.getDescription());
         dtoProduct.setCategoryId(product.getCategory().getId());
         dtoProduct.setBrandId(product.getBrand().getId());
@@ -67,6 +78,7 @@ public class ProductManager implements IProductService {
             dtoProduct.setName(product.getName());
             dtoProduct.setPrice(product.getPrice());
             dtoProduct.setStockAmount(product.getStockAmount());
+            dtoProduct.setImageUrl(product.getImageUrl());
             dtoProduct.setDescription(product.getDescription());
             dtoProduct.setCategoryId(product.getCategory().getId());
             dtoProduct.setBrandId(product.getBrand().getId());
@@ -85,6 +97,7 @@ public class ProductManager implements IProductService {
             dtoProduct.setName(product.getName());
             dtoProduct.setPrice(product.getPrice());
             dtoProduct.setStockAmount(product.getStockAmount());
+            dtoProduct.setImageUrl(product.getImageUrl());
             dtoProduct.setDescription(product.getDescription());
             dtoProduct.setCategoryId(product.getCategory().getId());
             dtoProduct.setBrandId(product.getBrand().getId());
@@ -104,6 +117,7 @@ public class ProductManager implements IProductService {
             dtoProduct.setPrice(product.getPrice());
             dtoProduct.setStockAmount(product.getStockAmount());
             dtoProduct.setDescription(product.getDescription());
+            dtoProduct.setImageUrl(product.getImageUrl());
             dtoProduct.setCategoryId(product.getCategory().getId());
             dtoProduct.setBrandId(product.getBrand().getId());
             dtoProducts.add(dtoProduct);
@@ -120,6 +134,7 @@ public class ProductManager implements IProductService {
             dtoProduct.setId(product.getId());
             dtoProduct.setName(product.getName());
             dtoProduct.setPrice(product.getPrice());
+            dtoProduct.setImageUrl(product.getImageUrl());
             dtoProduct.setStockAmount(product.getStockAmount());
             dtoProduct.setDescription(product.getDescription());
             dtoProduct.setCategoryId(product.getCategory().getId());
@@ -130,10 +145,10 @@ public class ProductManager implements IProductService {
     }
 
     @Override
-    public DtoProduct add(DtoProductIU dtoProductIU) {
+    public DtoProduct add(DtoProductIU dtoProductIU, MultipartFile file) {
+
         Product product = new Product();
         BeanUtils.copyProperties(dtoProductIU, product);
-        product.setImageUrl("imageURL");
         Category productCategory = new Category();
         productCategory.setId(dtoProductIU.getCategoryId());
         product.setCategory(productCategory);
@@ -141,27 +156,64 @@ public class ProductManager implements IProductService {
         productBrand.setId(dtoProductIU.getBrandId());
         product.setBrand(productBrand);
         Product dbProduct = this.productRepository.save(product);
+        Product product1 = dbProduct;
+        if (file != null) {
+            String originalFileName = file.getOriginalFilename();
+            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            String newFileName = dbProduct.getId() + extension;
+            String uploadDir = fileStorageProperties.getUploadDir();
+            Path filePath = Paths.get(uploadDir + newFileName);
+
+            try {
+                Files.createDirectories(filePath.getParent());
+                Files.write(filePath, file.getBytes());
+                product1 = this.productRepository.findById(dbProduct.getId()).get();
+                product1.setImageUrl("http://localhost:8080/uploads/" + newFileName);
+                this.productRepository.save(product1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         DtoProduct response = new DtoProduct();
-        BeanUtils.copyProperties(dbProduct, response);
-        response.setBrandId(dbProduct.getBrand().getId());
-        response.setCategoryId(dbProduct.getCategory().getId());
+        BeanUtils.copyProperties(product1, response);
+        response.setBrandId(product1.getBrand().getId());
+        response.setCategoryId(product1.getCategory().getId());
         return response;
     }
 
     @Override
-    public DtoProduct update(int id, DtoProductIU dtoProductIU) {
+    public DtoProduct update(int id, DtoProductIU dtoProductIU,MultipartFile file) {
         Product updateProduct = findProductOrThrow(id);
         updateProduct.setName(dtoProductIU.getName());
         updateProduct.setPrice(dtoProductIU.getPrice());
         updateProduct.setStockAmount(dtoProductIU.getStockAmount());
         updateProduct.setDescription(dtoProductIU.getDescription());
-        updateProduct.setImageUrl("imageURL");
         Brand productBrand = new Brand();
         productBrand.setId(dtoProductIU.getBrandId());
         updateProduct.setBrand(productBrand);
         Category productCategory = new Category();
         productCategory.setId(dtoProductIU.getCategoryId());
         updateProduct.setCategory(productCategory);
+
+
+
+        if (file != null) {
+            String originalFileName = file.getOriginalFilename();
+            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            String newFileName = id + extension;
+            String uploadDir = fileStorageProperties.getUploadDir();
+            Path filePath = Paths.get(uploadDir+newFileName);
+            try {
+                Files.createDirectories(filePath.getParent());
+                Files.write(filePath,file.getBytes());
+                updateProduct.setImageUrl("http://localhost:8080/uploads/" + newFileName);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
         Product dbProduct = this.productRepository.save(updateProduct);
         DtoProduct response = new DtoProduct();
         BeanUtils.copyProperties(dbProduct, response);
@@ -174,7 +226,13 @@ public class ProductManager implements IProductService {
 
     @Override
     public void delete(int id) {
-        findProductOrThrow(id);
+        Product deletedProduct = findProductOrThrow(id);
+        File file = new File(deletedProduct.getImageUrl());
+        if (file.exists()) {
+            file.delete(); // Dosya silinir ve başarı durumunu döner
+        } else {
+            System.out.println("Dosya bulunamadı: " + deletedProduct.getImageUrl());
+        }
         this.productRepository.deleteById(id);
     }
 

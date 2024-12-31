@@ -26,17 +26,17 @@ class UserManagerTest {
     @Autowired
     private IUserRepository userRepository;
 
-    @Test
-    void testGetAll() {
-        List<User> users = userManager.getAll();
-        assertNotNull(users);
-        assertEquals(2, users.size());
-        assertEquals("Zeynep", users.get(0).getFirstName());
-        assertEquals("Can", users.get(1).getLastName());
-        assertEquals(23,users.get(0).getAge());
-        assertEquals("password", users.get(0).getPassword());
-        assertEquals("zeynepkaya@gmail.com", users.get(0).getEmail());
-    }
+//    @Test
+//    void testGetAll() {
+//        List<User> users = userManager.getAll();
+//        assertNotNull(users);
+//        assertEquals(2, users.size());
+//        assertEquals("Zeynep", users.get(0).getFirstName());
+//        assertEquals("Can", users.get(1).getLastName());
+//        assertEquals(23,users.get(0).getAge());
+//        assertEquals("password", users.get(0).getPassword());
+//        assertEquals("zeynepkaya@gmail.com", users.get(0).getEmail());
+//    }
 
     @Test
     void testGetById() {

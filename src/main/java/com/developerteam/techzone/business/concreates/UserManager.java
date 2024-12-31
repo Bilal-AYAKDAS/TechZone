@@ -2,9 +2,12 @@ package com.developerteam.techzone.business.concreates;
 
 import com.developerteam.techzone.business.abstracts.IAuthService;
 import com.developerteam.techzone.business.abstracts.IUserService;
+import com.developerteam.techzone.dataAccess.abstracts.IRefreshTokenRepository;
 import com.developerteam.techzone.dataAccess.abstracts.IUserRepository;
+import com.developerteam.techzone.entities.concreates.RefreshToken;
 import com.developerteam.techzone.entities.concreates.User;
 import com.developerteam.techzone.entities.dto.DtoUser;
+import com.developerteam.techzone.entities.dto.DtoUserForAdmin;
 import com.developerteam.techzone.exception.ErrorMessage;
 import com.developerteam.techzone.exception.MessageType;
 import com.developerteam.techzone.exception.UserNotFoundException;
@@ -12,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,14 +26,24 @@ public class UserManager implements IUserService {
     @Autowired
     private IUserRepository userRepository;
 
+    @Autowired
+    IRefreshTokenRepository refreshTokenRepository;
+
 
     @Autowired
     private IAuthService authService;
 
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<DtoUserForAdmin> getAll() {
+        List <User> users = userRepository.findAll();
+        List<DtoUserForAdmin> dtoUsers = new ArrayList<>();
+        for (User user : users) {
+            DtoUserForAdmin dtoUser = new DtoUserForAdmin();
+            BeanUtils.copyProperties(user, dtoUser);
+            dtoUsers.add(dtoUser);
+        }
+        return dtoUsers;
     }
 
     @Override
@@ -54,7 +68,7 @@ public class UserManager implements IUserService {
 
     @Override
     public User update(int id, User user) {
-        Optional <User> existingUser = this.userRepository.findById(id);
+        Optional <User> existingUser = userRepository.findById(id);
         if (existingUser.isPresent()) {
             User updatedUser = existingUser.get();
             updatedUser.setEmail(user.getEmail());
@@ -62,13 +76,19 @@ public class UserManager implements IUserService {
             updatedUser.setFirstName(user.getFirstName());
             updatedUser.setLastName(user.getLastName());
             updatedUser.setPhoneNumber(user.getPhoneNumber());
-            return this.userRepository.save(updatedUser);
+            return userRepository.save(updatedUser);
         }
         return null;
     }
 
     @Override
     public void delete(int id) {
+        User user = userRepository.findById(id).orElse(null);
+        List <RefreshToken> refreshTokens = refreshTokenRepository.findByUser(user);
+        if (refreshTokens != null) {
+            System.out.println("refreshToken.getRefreshToken()");
+            refreshTokenRepository.deleteByUser(user);
+        }
         userRepository.deleteById(id);
     }
 

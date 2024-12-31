@@ -9,6 +9,9 @@ import com.developerteam.techzone.dataAccess.abstracts.IOrderRepository;
 import com.developerteam.techzone.entities.concreates.*;
 import com.developerteam.techzone.entities.dto.DtoOrder;
 import com.developerteam.techzone.entities.dto.DtoOrderIU;
+import com.developerteam.techzone.entities.dto.DtoOrderItem;
+import com.developerteam.techzone.entities.dto.DtoProduct;
+import com.developerteam.techzone.exception.BaseException;
 import com.developerteam.techzone.exception.ErrorMessage;
 import com.developerteam.techzone.exception.MessageType;
 import com.developerteam.techzone.exception.UserNotFoundException;
@@ -58,6 +61,20 @@ public class OrderManager implements IOrderService {
         for (Order order : orders){
             DtoOrder dtoOrder = new DtoOrder();
             BeanUtils.copyProperties(order,dtoOrder);
+            List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
+            List<DtoOrderItem> dtoOrderItems = new ArrayList<>();
+            for (OrderItem orderItem : orderItems){
+                DtoOrderItem dtoOrderItem = new DtoOrderItem();
+                BeanUtils.copyProperties(orderItem,dtoOrderItem);
+                Product product = orderItem.getProduct();
+                DtoProduct dtoProduct = new DtoProduct();
+                BeanUtils.copyProperties(product,dtoProduct);
+                dtoProduct.setCategoryId(product.getCategory().getId());
+                dtoProduct.setBrandId(product.getBrand().getId());
+                dtoOrderItem.setProduct(dtoProduct);
+                dtoOrderItems.add(dtoOrderItem);
+            }
+            dtoOrder.setOrderItems(dtoOrderItems);
             dtoOrders.add(dtoOrder);
         }
         return dtoOrders;
@@ -87,10 +104,12 @@ public class OrderManager implements IOrderService {
         int cartId = dtoOrderIU.getCartId();
         Optional<Cart> orderCart = cartRepository.findById(cartId);
         if (orderCart.isEmpty()){
-            return new DtoOrder();
+            new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(orderCart.get().getId())));
         }
-        if(orderCart.get().getUser().getId()==user.getId()){
-            return new DtoOrder();
+        if(orderCart.get().getUser().getId()!=user.getId()){
+            throw new UserNotFoundException(
+                    new ErrorMessage(MessageType.USER_NOT_FOUND, "Cart has not this user.")
+            );
         }
         // `Order` nesnesini oluştur
         Order order = new Order();
@@ -125,15 +144,19 @@ public class OrderManager implements IOrderService {
         dtoOrder.setId(order.getId());
         dtoOrder.setTotalPrice(totalPrice);
         dtoOrder.setStatus(order.getStatus());
+        dtoOrder.setCreatedDate(order.getCreatedDate());
+        dtoOrder.setModifiedDate(order.getModifiedDate());
+        List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
+        List<DtoOrderItem> dtoOrderItems = new ArrayList<>();
+        for (OrderItem orderItem : orderItems){
+            DtoOrderItem dtoOrderItem = new DtoOrderItem();
+            BeanUtils.copyProperties(orderItem,dtoOrderItem);
+            dtoOrderItems.add(dtoOrderItem);
+        }
+        dtoOrder.setOrderItems(dtoOrderItems);
+        cartItemRepository.deleteByCartId(cartId);
+        cartRepository.deleteById(cartId);
         return dtoOrder;
-
-
-
-
-
-
-
-
     }
 
     @Override
@@ -143,6 +166,20 @@ public class OrderManager implements IOrderService {
         for (Order order : orderList){
             DtoOrder dtoOrder = new DtoOrder();
             BeanUtils.copyProperties(order,dtoOrder);
+            List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
+            List<DtoOrderItem> dtoOrderItems = new ArrayList<>();
+            for (OrderItem orderItem : orderItems){
+                DtoOrderItem dtoOrderItem = new DtoOrderItem();
+                BeanUtils.copyProperties(orderItem,dtoOrderItem);
+                Product product = orderItem.getProduct();
+                DtoProduct dtoProduct = new DtoProduct();
+                BeanUtils.copyProperties(product,dtoProduct);
+                dtoProduct.setCategoryId(product.getCategory().getId());
+                dtoProduct.setBrandId(product.getBrand().getId());
+                dtoOrderItem.setProduct(dtoProduct);
+                dtoOrderItems.add(dtoOrderItem);
+            }
+            dtoOrder.setOrderItems(dtoOrderItems);
             dtoOrders.add(dtoOrder);
         }
         return dtoOrders;

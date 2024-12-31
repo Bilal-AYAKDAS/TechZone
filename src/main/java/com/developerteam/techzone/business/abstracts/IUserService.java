@@ -2,12 +2,13 @@ package com.developerteam.techzone.business.abstracts;
 
 import com.developerteam.techzone.entities.concreates.User;
 import com.developerteam.techzone.entities.dto.DtoUser;
+import com.developerteam.techzone.entities.dto.DtoUserForAdmin;
 
 import java.util.List;
 
 
 public interface IUserService {
-    List<User> getAll();
+    List<DtoUserForAdmin> getAll();
     User getById(int id);
     User getByEmail(String email);
     User getByEmailAndPassword(String email,String password);

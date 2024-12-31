@@ -5,6 +5,7 @@ import com.developerteam.techzone.business.abstracts.ICartService;
 import com.developerteam.techzone.dataAccess.abstracts.ICartItemRepository;
 import com.developerteam.techzone.dataAccess.abstracts.ICartRepository;
 import com.developerteam.techzone.entities.concreates.*;
+import com.developerteam.techzone.entities.dto.DtoCart;
 import com.developerteam.techzone.entities.dto.DtoCartItem;
 import com.developerteam.techzone.entities.dto.DtoCartItemIU;
 import com.developerteam.techzone.exception.BaseException;
@@ -62,7 +63,7 @@ public class CartManager implements ICartService {
     }
 
     @Override
-    public List<DtoCartItem> getOwnCart() {
+    public DtoCart getOwnCart() {
         Optional <User> optionalUser = authService.getAuthenticatedUser();
         Optional <Cart> optionalCart = cartRepository.findByUserId(optionalUser.get().getId());
         findCartOrThrow(optionalCart.get().getId());
@@ -76,7 +77,11 @@ public class CartManager implements ICartService {
             dtoCartItem.setProduct(cartItem.getProduct());
             dtoCartItems.add(dtoCartItem);
         }
-        return dtoCartItems;
+
+        DtoCart dtoCart = new DtoCart();
+        dtoCart.setId(optionalCart.get().getId());
+        dtoCart.setCartItems(dtoCartItems);
+        return dtoCart;
     }
 
     @Override
@@ -121,7 +126,15 @@ public class CartManager implements ICartService {
         if (!(cartItemRepository.findById(cartItemId).get().getCart().getUser().getId() == optionalUser.get().getId())){
             new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(optionalCart.get().getId())));
         }
-        cartItemRepository.deleteById(cartItemId);
+         Optional<CartItem> optionalCartItem = cartItemRepository.findById(cartItemId);
+            CartItem cartItem = optionalCartItem.get();
+            if (cartItem.getQuantity() > 1){
+                cartItem.setQuantity(cartItem.getQuantity() - 1);
+                cartItemRepository.save(cartItem);
+            }else {
+                cartItemRepository.deleteById(cartItemId);
+            }
+
     }
 
     @Override
@@ -130,7 +143,7 @@ public class CartManager implements ICartService {
         cartRepository.deleteById(id);
     }
 
-    private Cart findCartOrThrow(int id) {
+    public Cart findCartOrThrow(int id) {
         return cartRepository.findById(id)
                 .orElseThrow(() -> new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, Integer.toString(id))));
     }

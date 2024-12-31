@@ -1,10 +1,493 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    <title>Profilim</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="shortcut icon" href="#">
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Popper.js (Bootstrap için gerekli) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="../js/general.js"></script>
+
+    <style>
+        body {
+            overflow-x: hidden; /* Sayfanın kaydırılmasını engeller */
+        }
+
+        .navbar{
+            font-size: 16px;
+            top: 0;
+            left:0;
+            margin-bottom: 20px;
+        }
+
+
+        .navbar-dark .navbar-nav .nav-link:hover {
+            background-color: #495057; /* Üzerine gelince arka plan rengini değiştirir */
+        }
+        .table {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .table th, .table td {
+            padding: 10px;
+            text-align: left;
+        }
+        #addAdrsModal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 9999;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #editProfileModal{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 9999;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+
+    <script>
+        const getUserInfo =  () => {
+
+            const accessToken = localStorage.getItem('accessToken');
+
+            // Kullanıcı bilgilerini çekmek için AJAX çağrısı
+            $.ajax({
+                url: `http://localhost:8080/api/users/getOwnInfo`,
+                type: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                success: function (user) {
+                    $('#Name').val(user.firstName);
+                    $('#lstName').val(user.lastName);
+                    $('#e_mail').val(user.email);
+                    $('#phone').val(user.phoneNumber);
+                    $('#username').val(user.username);
+                    $('#password').val(user.password);
+                    $('#age').val(user.age);
+                },
+                error: function () {
+                    alert('Kullanıcı bilgileri alınırken bir hata oluştu.');
+                }
+            });
+        }
+
+        const updateProfile = () => {
+            const accessToken = localStorage.getItem('accessToken');
+            // Önceki hata mesajlarını temizle
+            $(".error-message").remove();
+
+            var updatedUser = {
+                firstName: $("#firstName").val(),
+                lastName: $("#lastName").val(),
+                email: $("#email").val(),
+                phoneNumber: $("#phoneNumber").val(),
+                age: $("#newage").val()
+            };
+
+            $.ajax({
+                type: "PUT",
+                url: "http://localhost:8080/api/users/updateOwnInfo", // Kullanıcı ID'sini buraya dinamik olarak ekle
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                data: JSON.stringify(updatedUser),
+                contentType: "application/json",
+                success: function () {
+                    alert("Profil başarıyla güncellendi!");
+                    $("#editProfileModal").hide();
+                    location.reload();
+                },
+                error: function () {
+                    alert("Kullanıcı bilgileri güncellenemedi.");
+                },
+            });
+        }
+
+        $(document).ready(function () {
+
+            controlAccessToken();
+            getUserInfo();
+            var accessToken = localStorage.getItem('accessToken');
+
+
+            $("#editProfileBtn").on("click", function () {
+
+                // Edit profile Modal'ı göster
+                $("#editProfileModal").show();
+                // Kullanıcı bilgilerini al ve modal içeriğini doldur
+                $.ajax({
+                    type: "GET",
+                    url: "http://localhost:8080/api/users/getOwnInfo", // Kullanıcının mevcut bilgilerini almak için bir endpoint
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    success: function (response) {
+
+                        $('#firstName').val(response.firstName);
+                        $("#lastName").val(response.lastName);
+                        $('#email').val(response.email);
+                        $('#phoneNumber').val(response.phoneNumber);
+                        $('#newage').val(response.age);
+
+
+                    },
+                    error: function () {
+                        alert("Kullanıcı bilgileri alınamadı.");
+                    },
+                });
+            });
+
+            $("#closeModalBtn").on("click", function () {
+                // Modal'ı kapat
+                $("#editProfileModal").hide();
+            });
+
+            // Profil Güncelleme Fonksiyonu
+            $("#saveProfileBtn").on("click", function () {
+                updateProfile();
+            });
+
+
+            //---------adres eklemek için modal çağrısı
+            $("#addadrsBtn").on("click", function () {
+                // Modal'ı göster
+                $("#addAdrsModal").show();
+
+            });
+
+            $("#closeAdrsModalBtn").on("click", function () {
+                // Modal'ı kapat
+                $("#addAdrsModal").hide();
+            });
+
+            // Adres Ekleme Fonksiyonu
+            $("#saveAdrsBtn").on("click", function () {
+                // Önceki hata mesajlarını temizle
+                $(".error-message").remove();
+
+                var newAdress = {
+                    country: $("#country").val(),
+                    city: $("#city").val(),
+                    district: $("#district").val(),
+                    postCode: $("#postCode").val(),
+                    adress: $("#adress").val(),
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/api/useradresses/add", //
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    data: JSON.stringify(newAdress),
+                    contentType: "application/json",
+                    success: function () {
+                        alert("Adres başarıyla eklendi!");
+                        $("#addAdrsModal").hide();
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        // Hata mesajlarını backend'den al
+                        var errorMessages = xhr.responseJSON?.exception?.message;
+
+                        if (errorMessages) {
+                            // Her bir hata mesajını ilgili input'un altına ekle
+                            Object.keys(errorMessages).forEach(function (key) {
+                                errorMessages[key].forEach(function (message) {
+                                    $("#" + key).after(
+                                        '<p class="error-message text-danger small">' + message + "</p>"
+                                    );
+                                });
+                            });
+                        } else {
+                            alert("Bilinmeyen bir hata oluştu.");
+                        }
+                    },
+                });
+            });
+
+            // Adresleri çekmek için AJAX çağrısı
+            $.ajax({
+                url: `http://localhost:8080/api/useradresses/ownAdress`,
+                type: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                success: function (addresses) {
+                    let addressTableBody = '';
+                    addresses.forEach((address, index) => {
+                        addressTableBody += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${address.country}</td>
+                        <td>${address.city}</td>
+                        <td>${address.district}</td>
+                        <td>${address.postCode}</td>
+                        <td>${address.adress}</td>
+                    </tr>
+                `;
+                    });
+                    $('#addressTableBody').html(addressTableBody);
+                },
+                error: function () {
+                    alert('Adresler alınırken bir hata oluştu.');
+                }
+            });
+
+
+            // Geçmiş siparişleri çekmek için AJAX çağrısı
+            $.ajax({
+                url: `http://localhost:8080/api/orders/getall`, // Siparişleri çekeceğiniz API endpoint
+                type: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                success: function (orders) {
+                    let orderTableBody = '';
+                    orders.forEach((order, index) => {
+                        orderTableBody += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${order.id}</td>
+                    <td>${order.totalPrice}</td>
+                    <td>${order.status} </td>
+                    <td>${dateFormatFnc(order.createdDate)}</td>
+
+                </tr>
+            `;
+                    });
+                    $('#orderTableBody').html(orderTableBody);
+                },
+                error: function () {
+                    alert('Siparişler alınırken bir hata oluştu.');
+                }
+            });
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+    </script>
 </head>
 <body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+    <a class="navbar-brand" href="#">
+        <img src="../../img/logo.png" style="margin-top:-13px;margin-bottom: -11px; height: 60px;" alt="Logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item ">
+                <a class="nav-link" href="../public/index">Ana Sayfa</a>
+            </li>
+            <li class="nav-item active" id="navbar-login">
+                <!-- Giriş butonu veya profil linki buraya dinamik olarak eklenir -->
+            </li>
+            <li class="nav-item" id="logout-btn" style="display: none;">
+                <a href="#" class="nav-link " onclick="logout()">Çıkış Yap</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../public/about">Hakkımızda</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="Contact">İletişim</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="cart"><i class="fa-solid fa-cart-shopping"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="favorites"><i class="fa-solid fa-heart"></i></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="breadcrumb" style="margin-top: 4rem;">
+        <a href="../public/index">Home</a><span class="sep">></span>Profilim
+    </div>
+    <h1 class="mb-4">Profilim</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="Name">Ad</label>
+                    <input type="text" class="form-control" id="Name" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="lstName">Soyad</label>
+                    <input type="text" class="form-control" id="lstName" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-posta</label>
+                    <input type="email" class="form-control" id="e_mail" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Telefon</label>
+                    <input type="text" class="form-control" id="phone" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Yaş</label>
+                    <input type="number" class="form-control" id="age" disabled>
+
+                </div>
+
+            </form>
+            <!-- Profil Düzenleme Butonu -->
+            <button id="editProfileBtn">Profilimi Düzenle</button>
+
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div id="editProfileModal" style="display: none;">
+    <div class="modal-content">
+        <h3>Profil Bilgilerini Düzenle</h3>
+        <form id="editProfileForm">
+            <label for="firstName">Ad:</label>
+            <input type="text" id="firstName" name="firstName" required>
+
+            <label for="lastName">Soyad:</label>
+            <input type="text" id="lastName" name="lastName" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phoneNumber">Telefon Numarası:</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" required>
+
+            <label for="newage">Yaş:</label>
+            <input type="text" id="newage" name="newage" required>
+
+            <button type="button" id="saveProfileBtn">Kaydet</button>
+            <button type="button" id="closeModalBtn">İptal</button>
+        </form>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Adreslerim</h2>
+    <button class="btn btn-primary" style="margin-bottom: 10px;" id="addadrsBtn">Adres Ekle</button>
+    <div id="addressList" class="card">
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Ülke</th>
+                    <th>Şehir</th>
+                    <th>İlçe</th>
+                    <th>Posta Kodu</th>
+                    <th>Adres</th>
+                </tr>
+                </thead>
+                <tbody id="addressTableBody">
+                <!-- Adresler buraya yüklenecek -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Adress Modal -->
+<div id="addAdrsModal" style="display: none;">
+    <div class="modal-content">
+        <h3>Yeni Adres Bilgileri</h3>
+        <form id="addAdrsForm">
+            <label for="country">Ülke:</label>
+            <input type="text" id="country" name="country" required>
+
+            <label for="city">Şehir:</label>
+            <input type="text" id="city" name="lastName" required>
+
+            <label for="district">İlçe:</label>
+            <input type="text" id="district" name="district" required>
+
+            <label for="postCode">Posta Kodu:</label>
+            <input type="text" id="postCode" name="postCode" required>
+
+            <label for="adress">Adres:</label>
+            <input type="text" id="adress" name="adress" required>
+
+            <button type="button" id="saveAdrsBtn">Kaydet</button>
+            <button type="button" id="closeAdrsModalBtn">İptal</button>
+        </form>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h2>Geçmiş Siparişlerim</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Sipariş No</th>
+            <th>Toplam Fiyat</th>
+            <th>Durum</th>
+            <th>Sipariş Tarihi</th>
+            <th>Ürün</th>
+        </tr>
+        </thead>
+        <tbody id="orderTableBody">
+        <!-- Siparişler dinamik olarak buraya eklenecek -->
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

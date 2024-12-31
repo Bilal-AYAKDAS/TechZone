@@ -21,5 +21,5 @@ public class DtoOrder {
     private String status;
     private Date createdDate;
     private Date modifiedDate;
-    private List<OrderItem> orderItems;
+    private List<DtoOrderItem> orderItems;
 }
