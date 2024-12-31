@@ -10,40 +10,35 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DtoBrandTest {
+class DtoCategoryIUTest {
 
     private final Validator validator;
 
-    public DtoBrandTest() {
+    public DtoCategoryIUTest() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         this.validator = factory.getValidator();
     }
 
-
     @Test
     void testNameTooShort() {
-        // Arrange
-        DtoBrand dtoBrand = new DtoBrand();
-        dtoBrand.setName("A"); // Invalid name: too short
+        DtoCategory dtoCategory = new DtoCategory();
+        dtoCategory.setName("A");
 
-        // Act
-        Set<ConstraintViolation<DtoBrand>> violations = validator.validate(dtoBrand);
+        Set<ConstraintViolation<DtoCategory>> violations = validator.validate(dtoCategory);
 
-        // Assert
         assertEquals(1, violations.size());
+
 
     }
 
     @Test
     void testNameTooLong() {
-        // Arrange
-        DtoBrand dtoBrand = new DtoBrand();
-        dtoBrand.setName("VeryLongBrandName"); // Invalid name: too long
+        DtoCategory dtoCategory = new DtoCategory();
+        dtoCategory.setName("veryLongCategoryName");
 
-        // Act
-        Set<ConstraintViolation<DtoBrand>> violations = validator.validate(dtoBrand);
+        Set<ConstraintViolation<DtoCategory>> violations = validator.validate(dtoCategory);
 
-        // Assert
         assertEquals(1, violations.size());
     }
+
 }
