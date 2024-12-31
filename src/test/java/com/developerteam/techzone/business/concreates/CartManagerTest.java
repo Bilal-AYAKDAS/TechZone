@@ -153,7 +153,6 @@ class CartManagerTest {
         assertNotNull(cart);
 
         cartManager.delete(cart.getId());
-
     }
 
     @Test

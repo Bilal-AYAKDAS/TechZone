@@ -227,11 +227,13 @@ public class ProductManager implements IProductService {
     @Override
     public void delete(int id) {
         Product deletedProduct = findProductOrThrow(id);
-        File file = new File(deletedProduct.getImageUrl());
-        if (file.exists()) {
-            file.delete(); // Dosya silinir ve başarı durumunu döner
-        } else {
-            System.out.println("Dosya bulunamadı: " + deletedProduct.getImageUrl());
+        try {
+            File file = new File(deletedProduct.getImageUrl());
+            if (file.exists()) {
+                file.delete(); // Dosya silinir ve başarı durumunu döner
+            }
+        }catch (Exception e){
+            System.out.println("Dosya silinirken hata"+e.getMessage());
         }
         this.productRepository.deleteById(id);
     }
