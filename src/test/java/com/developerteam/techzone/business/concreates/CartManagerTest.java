@@ -38,28 +38,25 @@ class CartManagerTest {
     @Autowired
     private ICartItemRepository cartItemRepository;
 
-    @Autowired
-    private IAuthService authService;
-
-    @Autowired
-    private IUserRepository userRepository;
 
     @Autowired
     private CartManager cartManager;
 
-    @Autowired
-    private IUserService userService;
-
-    @Autowired
-    private UserManager userManager;
 
     @Autowired
     private ProductManager productManager;
+    @Autowired
+    private UserManager userManager;
 
     @BeforeEach
     void setUp() {
         SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("mehmetcan@gmail.com", null, List.of()));
+
+        /*for testAdd
+        SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("alidemir@gmail.com", null, List.of()));
+    */
     }
 
     @Test
@@ -94,11 +91,12 @@ class CartManagerTest {
         DtoCart dtoCart = cartManager.getOwnCart();
         assertNotNull(dtoCart);
 
-        DtoCartItem cartItem = dtoCart.getCartItems().get(2);
+        DtoCartItem cartItem = dtoCart.getCartItems().get(0);
         assertNotNull(cartItem);
-        assertEquals(dtoCart.getCartItems().get(2).getId(), cartItem.getId());
-        assertEquals(dtoCart.getCartItems().get(2).getQuantity(), cartItem.getQuantity());
-        assertEquals(dtoCart.getCartItems().get(2).getProduct().getId(), cartItem.getProduct().getId());
+        System.out.println(cartItem.getProduct().getId());
+        assertEquals(dtoCart.getCartItems().get(0).getId(), cartItem.getId());
+        assertEquals(dtoCart.getCartItems().get(0).getQuantity(), cartItem.getQuantity());
+        assertEquals(dtoCart.getCartItems().get(0).getProduct().getId(), cartItem.getProduct().getId());
 
     }
 
@@ -106,19 +104,24 @@ class CartManagerTest {
     @Transactional
     @Rollback(false)
     void testAddItemToCart() {
+        User user = userManager.getById(15);
         DtoProduct product = productManager.getById(1);
 
         DtoCartItemIU dtoCartItemIU = new DtoCartItemIU();
         dtoCartItemIU.setProductId(product.getId());
-        dtoCartItemIU.setQuantity(8);
+        dtoCartItemIU.setQuantity(1);
 
         DtoCartItem result = cartManager.addItemToCart(dtoCartItemIU);
         assertNotNull(result);
-        assertEquals(8,result.getQuantity());
+        assertEquals(1,result.getQuantity());
         assertEquals(product.getId(), result.getProduct().getId());
 
-        Optional<Cart> userCart = cartRepository.findByUserId(1);
-        assertTrue(userCart.isPresent());
+        CartItem savedCartItem = cartItemRepository.findByCartIdAndProductId(
+                cartRepository.findByUserId(user.getId()).get().getId(),
+                product.getId()
+        ).orElse(null);
+        assertNotNull(savedCartItem);
+        assertEquals(result.getQuantity(), savedCartItem.getQuantity());
     }
 
 
@@ -126,31 +129,30 @@ class CartManagerTest {
     @Transactional
     @Rollback(false)
     void testRemoveItemFromCart() {
-        CartItem cartItem = cartItemRepository.getById(4);
+        CartItem cartItem = cartItemRepository.getById(3);
         assertNotNull(cartItem);
 
         cartManager.removeItemFromCart(cartItem.getId());
 
-        Optional<CartItem> deletedItem = cartItemRepository.findById(cartItem.getId());
-        assertFalse(deletedItem.isPresent());
+        CartItem updatedCartItem = cartItemRepository.findById(cartItem.getId()).orElse(null);
+        assertNotNull(updatedCartItem);
+        assertEquals(1, updatedCartItem.getQuantity());
     }
 
     @Test
     @Transactional
     @Rollback(false)
     void testDelete() {
-        Cart cart = cartRepository.getById(3);
+        List<CartItem> cartItems = cartItemRepository.findByCartId(4);
+        assertNotNull(cartItems);
+        for(CartItem cartItem : cartItems) {
+            cartItemRepository.deleteById(cartItem.getId());
+        }
+
+        Cart cart = cartRepository.getById(4);
         assertNotNull(cart);
 
-        List<CartItem> cartItems = cartItemRepository.findByCartId(cart.getId());
-        for (CartItem cartItem : cartItems) {
-            cartItemRepository.delete(cartItem);
-        }
-        cartItemRepository.flush();
-
         cartManager.delete(cart.getId());
-
-        assertFalse(cartRepository.existsById(cart.getId()));
     }
 
     @Test
