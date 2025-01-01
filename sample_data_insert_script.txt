@@ -1,0 +1,50 @@
+
+DELETE FROM ORDER_ITEMS;
+DELETE FROM ORDERS;
+DELETE FROM FAVORI_PRODUCTS;
+DELETE FROM CART_ITEMS;
+DELETE FROM PRODUCTS;
+DELETE FROM BRANDS;
+DELETE FROM CATEGORIES;
+
+---------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+INSERT INTO brands (id, name) VALUES
+(1, 'Apple'),
+(2, 'Samsung'),
+(3, 'Dell'),
+(4, 'HP'),
+(5, 'Lenovo');
+
+
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+
+INSERT INTO categories (id, name) VALUES
+(1, 'Laptops'),
+(2, 'Smartphones'),
+(3, 'Tablets'),
+(4, 'Accessories'),
+(5, 'Monitors');
+
+
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+INSERT INTO products (id, description, image_url, name, price, stock_amount, brand_id, category_id) VALUES
+(1, 'Apple MacBook Pro with M2 Chip', 'http://localhost:8080/uploads/1.jpeg', 'MacBook Pro 14-inch', 2499.99, 15, 1, 1),
+(2, 'Samsung Galaxy S22 Smartphone', 'http://localhost:8080/uploads/2.jpg', 'Galaxy S22', 799.99, 30, 2, 2),
+(3, 'Dell XPS 13 Laptop', 'http://localhost:8080/uploads/3.jpg', 'XPS 13', 1499.99, 20, 3, 1),
+(4, 'Lenovo ThinkPad X1 Carbon Laptop', 'http://localhost:8080/uploads/4.jpg', 'ThinkPad X1', 1299.99, 25, 5, 1),
+(5, 'Apple iPhone 14', 'http://localhost:8080/uploads/5.jpg', 'iPhone 14', 1099.99, 50, 1, 2),
+(6, 'Apple iPhone 15 Pro Max with advanced camera and performance.', 'http://localhost:8080/uploads/6.jpg', 'iPhone 15 Pro Max', 1599.99, 50, 1, 2),
+(7, 'Apple iPhone 15 with high-quality performance.', 'http://localhost:8080/uploads/7.png', 'iPhone 15', 1199.99, 100, 1, 2),
+(8, 'Apple iPhone 15 Pro with sleek design and advanced features.', 'http://localhost:8080/uploads/8.jpeg', 'iPhone 15 Pro', 1399.99, 70, 1, 2),
+(9, 'Samsung Galaxy S24 Ultra with high-resolution display and powerful processor.', 'http://localhost:8080/uploads/9.webp', 'Samsung Galaxy S24 Ultra', 1449.99, 40, 2, 2),
+(10, 'Samsung Galaxy A15 5G with budget-friendly price and 5G support.', 'http://localhost:8080/uploads/10.jpg', 'Samsung Galaxy A15 5G', 349.99, 150, 2, 2),
+(11, 'Samsung Galaxy A54 with balanced performance and elegant design.', 'http://localhost:8080/uploads/11.webp', 'Samsung Galaxy A54', 499.99, 200, 2, 2),
+(12, 'Apple iPhone 15 Plus with large screen and strong features.', 'http://localhost:8080/uploads/12.png', 'iPhone 15 Plus', 1299.99, 80, 1, 2),
+(13, 'Samsung Galaxy S24 with innovative features and strong performance.', 'http://localhost:8080/uploads/13.jpg', 'Samsung Galaxy S24', 1299.99, 60, 2, 2),
+(14, 'Samsung Galaxy A34 with affordable price and decent specifications.', 'http://localhost:8080/uploads/14.webp', 'Samsung Galaxy A34', 299.99, 300, 2, 2);
+
+--------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
