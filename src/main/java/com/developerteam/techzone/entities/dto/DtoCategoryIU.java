@@ -14,6 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DtoCategoryIU {
 
-    @Size(min = 2, max = 10, message = "Category name must be between 2 and 14 characters.")
+    @Size(min = 2, max = 10, message = "Category name must be between 2 and 10 characters.")
     private String name;
 }
