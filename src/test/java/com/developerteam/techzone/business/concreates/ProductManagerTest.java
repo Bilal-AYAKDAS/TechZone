@@ -18,9 +18,16 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -131,72 +138,105 @@ class ProductManagerTest {
         assertEquals(1, dtoProducts.get(0).getBrandId());
     }
 
-//    @Test
-//    @Transactional
-//    @Rollback(false)
-//    void testAdd() {
-//        DtoBrand dtoBrands = brandManager.getById(5);
-//
-//        DtoCategory dtoCategories = categoryManager.getById(2);
-//
-//        DtoProductIU dtoProductIU = new DtoProductIU();
-//        dtoProductIU.setName("A54");
-//        dtoProductIU.setDescription("-");
-//        dtoProductIU.setPrice(20000);
-//        dtoProductIU.setStockAmount(5);
-//        dtoProductIU.setCategoryId(dtoCategories.getId());
-//        dtoProductIU.setBrandId(dtoBrands.getId());
-//
-//        DtoProduct result = productManager.add(dtoProductIU);
-//
-//        assertNotNull(result);
-//        assertEquals("A54", result.getName());
-//        assertEquals(dtoCategories.getId(), result.getCategoryId());
-//        assertEquals(dtoBrands.getId(), result.getBrandId());
-//
-//        Product savedProduct = productRepository.getById(1);
-//        assertNotNull(savedProduct);
-//        assertEquals(result.getName(), savedProduct.getName());
-//        assertEquals("imageURL", savedProduct.getImageUrl());
-//        assertEquals(result.getDescription(), savedProduct.getDescription());
-//        assertEquals(result.getPrice(), savedProduct.getPrice());
-//        assertEquals(result.getStockAmount(), savedProduct.getStockAmount());
-//        assertEquals(dtoCategories.getId(), savedProduct.getCategory().getId());
-//        assertEquals(dtoBrands.getId(), savedProduct.getBrand().getId());
-//    }
+    @Test
+    @Transactional
+    @Rollback(false)
+    void testAdd() throws IOException {
+        DtoBrand dtoBrands = brandManager.getById(5);
 
-//    @Test
-//    @Transactional
-//    @Rollback(false)
-//    void testUpdate() {
-//        DtoBrand dtoBrands = brandManager.getById(1);
-//        DtoCategory dtoCategories = categoryManager.getById(2);
-//
-//        DtoProductIU dtoProductIU = new DtoProductIU();
-//        dtoProductIU.setName("Iphone 11 pro");
-//        dtoProductIU.setDescription("-");
-//        dtoProductIU.setPrice(25000);
-//        dtoProductIU.setStockAmount(2);
-//        dtoProductIU.setCategoryId(dtoCategories.getId());
-//        dtoProductIU.setBrandId(dtoBrands.getId());
-//
-//        DtoProduct result = productManager.update(2,dtoProductIU);
-//        assertNotNull(result);
-//        assertEquals("Iphone 11 pro", result.getName());
-//        assertEquals(dtoCategories.getId(), result.getCategoryId());
-//        assertEquals(dtoBrands.getId(), result.getBrandId());
-//
-//        Product savedProduct = productRepository.getById(2);
-//        assertNotNull(savedProduct);
-//        assertEquals(result.getName(), savedProduct.getName());
-//        assertEquals("imageURL", savedProduct.getImageUrl());
-//        assertEquals(result.getDescription(), savedProduct.getDescription());
-//        assertEquals(result.getPrice(), savedProduct.getPrice());
-//        assertEquals(result.getStockAmount(), savedProduct.getStockAmount());
-//        assertEquals(dtoCategories.getId(), savedProduct.getCategory().getId());
-//        assertEquals(dtoBrands.getId(), savedProduct.getBrand().getId());
-//
-//    }
+        DtoCategory dtoCategories = categoryManager.getById(2);
+
+        DtoProductIU dtoProductIU = new DtoProductIU();
+        dtoProductIU.setName("S21 FE");
+        dtoProductIU.setDescription("-");
+        dtoProductIU.setPrice(18000);
+        dtoProductIU.setStockAmount(3);
+        dtoProductIU.setCategoryId(dtoCategories.getId());
+        dtoProductIU.setBrandId(dtoBrands.getId());
+
+        String uploadDir = "C:/Users/Nursena/Desktop/TechZone/uploads/";
+        Path filePath = Paths.get(uploadDir);
+        Files.createDirectories(filePath);
+
+        MultipartFile file = new MockMultipartFile(
+                "file",
+                "1660422071202.jpeg",
+                "image/jpeg",
+                "Test Image Content".getBytes()
+        );
+
+
+        DtoProduct result = productManager.add(dtoProductIU, file);
+
+        assertNotNull(result);
+        assertEquals("S21 FE", result.getName());
+        assertEquals(dtoCategories.getId(), result.getCategoryId());
+        assertEquals(dtoBrands.getId(), result.getBrandId());
+
+        Path uploadedFilePath = Paths.get(uploadDir + result.getId() + ".jpg");
+        System.out.println("Dosya yolu: " + uploadedFilePath);
+        assertTrue(Files.exists(uploadedFilePath), "Dosya doğru şekilde kaydedilmelidir.");
+
+        Files.deleteIfExists(uploadedFilePath);
+
+        Product savedProduct = productRepository.getById(3);
+        assertNotNull(savedProduct);
+        assertEquals(result.getName(), savedProduct.getName());
+        assertEquals("imageURL", savedProduct.getImageUrl());
+        assertEquals(result.getDescription(), savedProduct.getDescription());
+        assertEquals(result.getPrice(), savedProduct.getPrice());
+        assertEquals(result.getStockAmount(), savedProduct.getStockAmount());
+        assertEquals(dtoCategories.getId(), savedProduct.getCategory().getId());
+        assertEquals(dtoBrands.getId(), savedProduct.getBrand().getId());
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    void testUpdate() throws IOException {
+        DtoBrand dtoBrands = brandManager.getById(5);
+        DtoCategory dtoCategories = categoryManager.getById(2);
+
+        DtoProductIU dtoProductIU = new DtoProductIU();
+        dtoProductIU.setName("Galaxy Z Flip 3");
+        dtoProductIU.setDescription("-");
+        dtoProductIU.setPrice(70000);
+        dtoProductIU.setStockAmount(2);
+        dtoProductIU.setCategoryId(dtoCategories.getId());
+        dtoProductIU.setBrandId(dtoBrands.getId());
+
+        String uploadDir = "C:/Users/Nursena/Desktop/TechZone/uploads/";
+        Path filePath = Paths.get(uploadDir);
+        Files.createDirectories(filePath);
+
+        MultipartFile file = new MockMultipartFile(
+                "file",
+                "1660422071202.jpeg",
+                "image/jpeg",
+                "Updated Image Content".getBytes()
+        );
+
+        DtoProduct result = productManager.update(9, dtoProductIU, file);
+
+        assertNotNull(result);
+        assertEquals("Galaxy Z Flip 3", result.getName());
+        assertEquals(dtoCategories.getId(), result.getCategoryId());
+        assertEquals(dtoBrands.getId(), result.getBrandId());
+
+        Path uploadedFilePath = Paths.get(uploadDir + result.getId() + ".jpeg");
+        assertTrue(Files.exists(uploadedFilePath));
+
+        Product savedProduct = productRepository.getById(9);
+        assertNotNull(savedProduct);
+        assertEquals(result.getName(), savedProduct.getName());
+        assertEquals("imageURL", savedProduct.getImageUrl());
+        assertEquals(result.getDescription(), savedProduct.getDescription());
+        assertEquals(result.getPrice(), savedProduct.getPrice());
+        assertEquals(result.getStockAmount(), savedProduct.getStockAmount());
+        assertEquals(dtoCategories.getId(), savedProduct.getCategory().getId());
+        assertEquals(dtoBrands.getId(), savedProduct.getBrand().getId());
+
+    }
 
     @Test
     @Transactional
