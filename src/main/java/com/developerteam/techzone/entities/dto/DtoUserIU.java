@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DtoUserIU {
 
+
     @Size(min = 2, max = 15, message = "FirstName must be between 2 and 15 characters.")
     private String firstName;
 

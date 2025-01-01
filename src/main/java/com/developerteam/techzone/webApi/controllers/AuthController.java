@@ -2,6 +2,7 @@ package com.developerteam.techzone.webApi.controllers;
 
 import com.developerteam.techzone.business.abstracts.IAuthService;
 import com.developerteam.techzone.business.abstracts.IRefreshTokenService;
+import com.developerteam.techzone.entities.dto.DtoChangePasswdIU;
 import com.developerteam.techzone.entities.dto.DtoUserIU;
 import com.developerteam.techzone.jwt.AuthRequest;
 import com.developerteam.techzone.jwt.AuthResponse;
@@ -39,5 +40,10 @@ public class AuthController {
     @GetMapping("/getUserType")
     public String getUserType() {
         return authService.getUserType();
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(@RequestBody DtoChangePasswdIU changePasswd) {
+        return authService.changePassword(changePasswd);
     }
 }

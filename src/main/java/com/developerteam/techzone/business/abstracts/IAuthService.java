@@ -1,6 +1,7 @@
 package com.developerteam.techzone.business.abstracts;
 
 import com.developerteam.techzone.entities.concreates.User;
+import com.developerteam.techzone.entities.dto.DtoChangePasswdIU;
 import com.developerteam.techzone.entities.dto.DtoUserIU;
 import com.developerteam.techzone.jwt.AuthRequest;
 import com.developerteam.techzone.jwt.AuthResponse;
@@ -17,4 +18,5 @@ public interface IAuthService {
 
      String getUserType();
 
+     String changePassword(DtoChangePasswdIU changePasswd);
 }

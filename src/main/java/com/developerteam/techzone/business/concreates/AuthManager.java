@@ -5,6 +5,7 @@ import com.developerteam.techzone.business.abstracts.IRefreshTokenService;
 import com.developerteam.techzone.dataAccess.abstracts.IUserRepository;
 import com.developerteam.techzone.entities.concreates.RefreshToken;
 import com.developerteam.techzone.entities.concreates.User;
+import com.developerteam.techzone.entities.dto.DtoChangePasswdIU;
 import com.developerteam.techzone.entities.dto.DtoUserIU;
 import com.developerteam.techzone.jwt.AuthRequest;
 import com.developerteam.techzone.jwt.AuthResponse;
@@ -83,6 +84,44 @@ public class AuthManager implements IAuthService {
         String userType = jwtService.getUserTypeFromToken();
         System.out.println(userType);
         return userType;
-
     }
+
+    @Override
+    public String changePassword(DtoChangePasswdIU dtoChangePasswdIU) {
+        try {
+            // Authenticated user
+
+            Optional<User> optionalUser = userRepository.findByEmail(dtoChangePasswdIU.getEmail());
+
+            if (optionalUser.isEmpty()) {
+                return "User not found.";
+            }
+
+            User user = optionalUser.get();
+
+            // Verify old password
+            if (!bCryptPasswordEncoder.matches(dtoChangePasswdIU.getOldPasswd(), user.getPassword())) {
+                return "Old password not match.";
+            }
+
+            // Check if the new password is different from the old one
+            if (dtoChangePasswdIU.getOldPasswd().equals(dtoChangePasswdIU.getNewPasswd())) {
+                return "Old password and new passsword must be different.";
+            }
+
+            if (!dtoChangePasswdIU.getNewPasswd().equals(dtoChangePasswdIU.getConfirmPasswd())) {
+                return "New password and confirm password must be same.";
+            }
+            // Update password
+            user.setPassword(bCryptPasswordEncoder.encode(dtoChangePasswdIU.getNewPasswd()));
+            userRepository.save(user);
+
+            return "Password changed.";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Password not changed.";
+        }
+    }
+
 }

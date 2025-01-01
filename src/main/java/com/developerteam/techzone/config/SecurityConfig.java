@@ -20,6 +20,7 @@ public class SecurityConfig {
     public static final String AUTHENTICATE = "/authenticate";
     public static final String REGISTER = "/register";
     public static final String REFRESH_TOKEN = "/refreshToken";
+    public static final String CHANGE_PASSWD = "/changePassword";
     public static final String PRODUCTS = "/api/products/**";
     public static final String BRANDS = "/api/brands/**";
     public static final String USERS = "/api/users/**";
@@ -49,6 +50,7 @@ public class SecurityConfig {
             AUTHENTICATE,
             REGISTER,
             REFRESH_TOKEN,
+            CHANGE_PASSWD,
             PRODUCTS,
             CATEGORY,
             BRANDS,
