@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 
-    <title>Favorilerim</title>
+    <title>My Favorites</title>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="#">
 
@@ -84,7 +84,7 @@
                             <td>${product.name}</td>
                             <td>${product.price} TL</td>
                             <td>
-                                <button class="btn btn-danger btn-sm" onclick="removeFavorite(${item.id})">Sil</button>
+                                <button class="btn btn-danger btn-sm" onclick="removeFavorite(${item.id})">Delete</button>
                             </td>
                         </tr>
                         `;
@@ -92,7 +92,7 @@
                     });
                 },
                 error: function () {
-                    alert('Favori ürünler alınırken bir hata oluştu.');
+                    alert('An error occurred while retrieving favorite products.');
                 }
             });
         });
@@ -107,11 +107,11 @@
                     'Authorization': `Bearer ${userId}` // Yetkilendirme başlığı
                 },
                 success: function () {
-                    alert('Ürün favorilerden kaldırıldı.');
+                    alert('Product removed from favorites.');
                     location.reload(); // Sayfayı yenile
                 },
                 error: function () {
-                    alert('Ürün silinirken bir hata oluştu.');
+                    alert('An error occurred while deleting the product from favorites.');
                 }
             });
         }
@@ -133,23 +133,21 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item ">
-                <a class="nav-link" href="../public/index">Ana Sayfa</a>
+                <a class="nav-link" href="../public/index">Home Page</a>
             </li>
             <li class="nav-item" id="navbar-login">
                 <!-- Giriş butonu veya profil linki buraya dinamik olarak eklenir -->
             </li>
             <li class="nav-item" id="logout-btn" style="display: none;">
-                <a href="#" class="nav-link " onclick="logout()">Çıkış Yap</a>
+                <a href="#" class="nav-link " onclick="logout()">Logout</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../public/about">Hakkımızda</a>
+                <a class="nav-link" href="../public/about">About Us</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="Contact">İletişim</a>
+                <a class="nav-link" href="Contact">Contact</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></a>
-            </li>
+
             <li class="nav-item">
                 <a class="nav-link" href="cart"><i class="fa-solid fa-cart-shopping"></i></a>
             </li>
@@ -161,15 +159,15 @@
 </nav>
 
 <div class="container mt-5">
-    <div class="breadcrumb" style="margin-top: 4rem;"><a href="../public/index">Home</a><span class="sep">></span>Favorilerim</div>
-    <h1 class="mb-4">Favorilerim</h1>
+    <div class="breadcrumb" style="margin-top: 4rem;"><a href="../public/index">Home</a><span class="sep">></span>My Favorites</div>
+    <h1 class="mb-4">My Favorites</h1>
     <table class="table table-bordered">
         <thead>
         <tr>
             <th></th>
-            <th>Ürün Adı</th>
-            <th>Fiyat</th>
-            <th>Sil</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th></th>
         </tr>
         </thead>
         <tbody id="favoritesTableBody">
