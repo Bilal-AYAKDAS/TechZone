@@ -154,12 +154,7 @@ body {
         margin-top: 0;
     }
 
-    .sidebar {
-        flex: 1;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid #ddd;
-    }
+
 
     #products {
         flex: 1;
