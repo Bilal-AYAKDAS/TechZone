@@ -5,11 +5,11 @@ $(document).ready(function () {
 
     if (accessToken) {
         // Kullanıcı giriş yapmışsa
-        $('#navbar-login').html('<a href="../customer/profile" class="nav-link">Profilim</a>');
+        $('#navbar-login').html('<a href="../customer/profile" class="nav-link">My Profile</a>');
         $('#logout-btn').show(); // Çıkış butonunu göster
     } else {
         // Kullanıcı giriş yapmamışsa
-        $('#navbar-login').html('<a href="../public/login" class="nav-link">Giriş Yap</a>');
+        $('#navbar-login').html('<a href="../public/login" class="nav-link">Login</a>');
         $('#logout-btn').hide(); // Çıkış butonunu gizle
     }
 
@@ -17,13 +17,13 @@ $(document).ready(function () {
     $('.fa-heart').on('click', function (e) {
         if (!localStorage.getItem('accessToken')) {
             e.preventDefault(); // Sayfanın yönlendirilmesini durdur
-            alert('Lütfen önce giriş yapınız!');
+            alert('Please login first!');
         }
     });
     $('.fa-cart-shopping').on('click', function (e) {
         if (!localStorage.getItem('accessToken')) {
             e.preventDefault(); // Sayfanın yönlendirilmesini durdur
-            alert('Lütfen önce giriş yapınız!');
+            alert('Please login first!');
         }
     });
 
@@ -59,7 +59,7 @@ $(document).ready(function () {
             });
         },
         error: function (error) {
-            console.error('Kategoriler yüklenirken hata:', error);
+            console.error('Error loading categories.', error);
         }
     });
 
@@ -90,7 +90,7 @@ $(document).ready(function () {
             $('#brands').show(); // Markalar bölümünü göster
         },
         error: function (error) {
-            console.error('Markalar yüklenirken hata:', error);
+            console.error('Error loading brands.', error);
         }
     });
 
@@ -144,8 +144,8 @@ $(document).ready(function () {
                             <p class="card-text">Fiyat: ${product.price} TL</p>
                             <p class="card-text">${product.description || ''}</p>
                             <div class="card-buttons">
-                              <button class="btn btn-primary btn-cart" style="margin-bottom: 10px;">Sepete Ekle</button>
-                              <button class="btn btn-danger btn-favori">Favorilere Ekle</button>
+                              <button class="btn btn-primary btn-cart" style="margin-bottom: 10px;">Add to Cart</button>
+                              <button class="btn btn-danger btn-favori">Add to Favorites</button>
                             </div>
                           </div>
                         </div>
@@ -155,7 +155,7 @@ $(document).ready(function () {
                     });
                 },
                 error: function (error) {
-                    console.error('Ürünler yüklenirken hata:', error);
+                    console.error('Error while loading products:', error);
                 }
             });
         });
@@ -172,7 +172,7 @@ $(document).ready(function () {
         const userId = localStorage.getItem('accessToken'); // Kullanıcı ID'sini Local Storage'dan al
 
         if (!userId) {
-            alert('Lütfen önce giriş yapınız!');
+            alert('Please login first!');
             return;
         }
 
@@ -192,11 +192,11 @@ $(document).ready(function () {
             },
             data: JSON.stringify(cartItemData),
             success: function (response) {
-                alert(`${productName} sepete başarıyla eklendi!`);
+                alert(`${productName} successfully added to your cart!`);
             },
             error: function (error) {
-                console.error('Sepete ekleme sırasında hata:', error);
-                alert('Sepete eklenirken bir hata oluştu.');
+                console.error('Error while adding to cart.', error);
+                alert('Error while adding to cart.');
             }
         });
 
@@ -213,7 +213,7 @@ $(document).ready(function () {
         const userId = localStorage.getItem('accessToken'); // Kullanıcı ID'sini Local Storage'dan al
 
         if (!userId) {
-            alert('Lütfen önce giriş yapınız!');
+            alert('Please login first!');
             return;
         }
 
@@ -228,7 +228,7 @@ $(document).ready(function () {
                 const isAlreadyFavorite = favoriteProducts.some(fav => fav.product.id === productId);
 
                 if (isAlreadyFavorite) {
-                    alert('Bu ürün zaten favorilerinizde.');
+                    alert('This product is already in your favorites.');
                 } else {
                     // Favorilere ekleme
                     $.ajax({
@@ -242,18 +242,18 @@ $(document).ready(function () {
                             productId: productId // Sadece productId gönder
                         }),
                         success: function () {
-                            alert(`${productName} favorilere başarıyla eklendi!`);
+                            alert(`${productName} successfully added to your favorites!`);
                         },
                         error: function (error) {
-                            console.error('Favorilere ekleme sırasında hata:', error);
-                            alert('Favorilere eklenirken bir hata oluştu.');
+                            console.error('Error while adding to favorites:', error);
+                            alert('Error while adding to favorites.');
                         }
                     });
                 }
             },
             error: function (error) {
-                console.error('Favorileri kontrol ederken hata oluştu:', error);
-                alert('Favori kontrolü sırasında bir hata oluştu.');
+                console.error('An error occurred while checking favorites:', error);
+                alert('An error occurred while checking favorites.');
             }
         });
     });
@@ -266,7 +266,7 @@ function logout() {
     localStorage.removeItem('refreshToken');
 
     // Kullanıcıya mesaj göster
-    alert("Çıkış başarılı!");
+    alert("Logout successful!");
 
     // Sayfayı login.html'e yönlendir
     window.location.href = '/';

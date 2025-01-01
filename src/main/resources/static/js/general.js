@@ -9,11 +9,11 @@ const  controlAccessToken =() => {
 
     if (accessToken) {
         // Kullanıcı giriş yapmışsa
-        $('#navbar-login').html('<a href="../customer/profile" class="nav-link">Profilim</a>');
+        $('#navbar-login').html('<a href="../customer/profile" class="nav-link">My Profile</a>');
         $('#logout-btn').show(); // Çıkış butonunu göster
     } else {
         // Kullanıcı giriş yapmamışsa
-        $('#navbar-login').html('<a href="../public/login" class="nav-link">Giriş Yap</a>');
+        $('#navbar-login').html('<a href="../public/login" class="nav-link">Login</a>');
         $('#logout-btn').hide(); // Çıkış butonunu gizle
     }
 }
