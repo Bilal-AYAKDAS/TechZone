@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DtoUserAdress {
 
+    private int id;
     private String country;
     private String city;
     private String district;
