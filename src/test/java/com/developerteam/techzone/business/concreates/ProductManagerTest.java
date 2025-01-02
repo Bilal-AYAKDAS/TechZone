@@ -56,7 +56,7 @@ class ProductManagerTest {
         assertNotNull(dtoProduct);
         assertEquals(1,dtoProduct.getId());
         assertEquals("-", dtoProduct.getDescription());
-        assertEquals(null, dtoProduct.getImageUrl());
+        assertEquals("imageURL", dtoProduct.getImageUrl());
         assertEquals("A54", dtoProduct.getName());
         assertEquals(20000, dtoProduct.getPrice());
         assertEquals(5, dtoProduct.getStockAmount());
@@ -71,7 +71,7 @@ class ProductManagerTest {
         assertEquals(2, dtoProducts.size());
         assertEquals(1,dtoProducts.get(0).getId());
         assertEquals("-", dtoProducts.get(0).getDescription());
-        assertEquals(null, dtoProducts.get(0).getImageUrl());
+        assertEquals("imageURL", dtoProducts.get(0).getImageUrl());
         assertEquals("A54", dtoProducts.get(0).getName());
         assertEquals(20000, dtoProducts.get(0).getPrice());
         assertEquals(5, dtoProducts.get(0).getStockAmount());
@@ -85,7 +85,7 @@ class ProductManagerTest {
         assertNotNull(dtoProducts);
         assertEquals(2,dtoProducts.get(1).getId());
         assertEquals("-", dtoProducts.get(1).getDescription());
-        assertEquals(null, dtoProducts.get(1).getImageUrl());
+        assertEquals("imageURL", dtoProducts.get(1).getImageUrl());
         assertEquals("Iphone 11 pro", dtoProducts.get(1).getName());
         assertEquals(25000, dtoProducts.get(1).getPrice());
         assertEquals(2, dtoProducts.get(1).getStockAmount());
@@ -100,7 +100,7 @@ class ProductManagerTest {
         assertEquals(2,dtoProducts.get(0).getId());
         assertEquals("-", dtoProducts.get(0).getDescription());
         assertEquals("-", dtoProducts.get(0).getDescription());
-        assertEquals(null, dtoProducts.get(0).getImageUrl());
+        assertEquals("imageURL", dtoProducts.get(0).getImageUrl());
         assertEquals("Iphone 11 pro", dtoProducts.get(0).getName());
         assertEquals(25000, dtoProducts.get(0).getPrice());
         assertEquals(2, dtoProducts.get(0).getStockAmount());
@@ -115,7 +115,7 @@ class ProductManagerTest {
         assertEquals(2,dtoProducts.get(0).getId());
         assertEquals("-", dtoProducts.get(0).getDescription());
         assertEquals("-", dtoProducts.get(0).getDescription());
-        assertEquals(null, dtoProducts.get(0).getImageUrl());
+        assertEquals("imageURL", dtoProducts.get(0).getImageUrl());
         assertEquals("Iphone 11 pro", dtoProducts.get(0).getName());
         assertEquals(25000, dtoProducts.get(0).getPrice());
         assertEquals(2, dtoProducts.get(0).getStockAmount());
@@ -130,7 +130,7 @@ class ProductManagerTest {
         assertEquals(2,dtoProducts.get(0).getId());
         assertEquals("-", dtoProducts.get(0).getDescription());
         assertEquals("-", dtoProducts.get(0).getDescription());
-        assertEquals(null, dtoProducts.get(0).getImageUrl());
+        assertEquals("imageURL", dtoProducts.get(0).getImageUrl());
         assertEquals("Iphone 11 pro", dtoProducts.get(0).getName());
         assertEquals(25000, dtoProducts.get(0).getPrice());
         assertEquals(2, dtoProducts.get(0).getStockAmount());
